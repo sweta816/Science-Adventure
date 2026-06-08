@@ -294,13 +294,15 @@ body{font-family:'Segoe UI',sans-serif;overflow-x:hidden;color:#222}
 /* ── STAR RAIN ── */
 .srain{
   position:fixed;top:-60px;z-index:9995;pointer-events:none;
-  animation:starFall var(--dur,1.2s) ease-out var(--dl,0s) forwards;
+  animation:starFall var(--dur,3s) linear var(--dl,0s) forwards;
   line-height:1;
 }
 @keyframes starFall{
-  0%{transform:translateY(0) rotate(0deg) scale(1.2);opacity:1}
-  75%{opacity:1}
-  100%{transform:translateY(110vh) rotate(540deg) scale(.6);opacity:0}
+  0%  {transform:translateY(0)     translateX(0)    rotate(0deg)   scale(1.2);opacity:1}
+  25% {transform:translateY(25vh)  translateX(12px) rotate(90deg)  scale(1);}
+  50% {transform:translateY(50vh)  translateX(-8px) rotate(200deg) scale(.9);opacity:1}
+  75% {transform:translateY(75vh)  translateX(10px) rotate(320deg) scale(.8);opacity:.8}
+  100%{transform:translateY(115vh) translateX(-5px) rotate(480deg) scale(.5);opacity:0}
 }
 
 /* ── BLACK CLOUDS ── */
@@ -776,7 +778,7 @@ function showStarsRain(){
       el.style.borderRadius='50%';
       el.style.background=cols[Math.floor(Math.random()*cols.length)];
     }
-    const dur=0.9+Math.random()*.85,dl=Math.random()*.75;
+    const dur=2.8+Math.random()*1.6,dl=Math.random()*1.0;
     el.style.left=(2+Math.random()*96)+'vw';
     el.style.setProperty('--dur',dur+'s');
     el.style.setProperty('--dl',dl+'s');
