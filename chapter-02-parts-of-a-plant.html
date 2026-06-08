@@ -91,30 +91,50 @@ body{font-family:'Segoe UI',sans-serif;overflow-x:hidden;color:#222}
 /* ─────────────────────────────
    SCREEN 1 · BALLOONS
 ───────────────────────────── */
-#s1{background:linear-gradient(180deg,#87ceeb 0%,#b3e5fc 60%,#e8f5e9 100%)}
-.sky{position:relative;height:265px;background:linear-gradient(180deg,#5c9bd6 0%,#90caf9 55%,#bbdefb 100%);
+#s1{background:linear-gradient(180deg,#0d1b4b 0%,#1a2e6e 50%,#1a3a6e 100%)}
+.sky{position:relative;height:290px;
+  background:radial-gradient(ellipse at 50% 0%,#1a237e 0%,#0d1b4b 60%,#090e2e 100%);
   border-radius:16px;overflow:hidden;margin-bottom:12px}
-.cld{position:absolute;background:rgba(255,255,255,.82);border-radius:40px}
-.cld b{position:absolute;background:rgba(255,255,255,.82);border-radius:50%}
-.bal{position:absolute;bottom:20px;cursor:pointer;
-  animation:floatB var(--d,3s) ease-in-out infinite var(--dl,0s);
+/* bubble */
+.bubble{position:absolute;cursor:pointer;
+  animation:bFloat var(--d,4s) ease-in-out infinite var(--dl,0s);
   user-select:none;-webkit-tap-highlight-color:transparent}
-.bal-body{width:50px;height:64px;border-radius:50% 50% 48% 48%/55% 55% 45% 45%;
-  background:var(--bc);position:relative;display:flex;align-items:center;justify-content:center;
-  box-shadow:inset -6px -5px 0 rgba(0,0,0,.13),inset 5px 5px 0 rgba(255,255,255,.22)}
-.bal-shine{position:absolute;top:7px;left:8px;width:11px;height:16px;
-  background:rgba(255,255,255,.38);border-radius:50%;transform:rotate(-25deg)}
-.bal-num{font-size:1rem;font-weight:900;color:rgba(255,255,255,.93);text-shadow:0 1px 4px rgba(0,0,0,.3)}
-.bal-knot{width:9px;height:9px;border-radius:50%;background:var(--bc);margin:0 auto}
-.bal-str{width:1.5px;height:46px;background:rgba(0,0,0,.22);margin:0 auto}
-@keyframes floatB{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-20px) rotate(2deg)}}
-.bal.popped{animation:balPop .35s ease-out forwards!important;pointer-events:none}
-@keyframes balPop{0%{transform:scale(1);opacity:1}40%{transform:scale(1.4);opacity:.8}100%{transform:scale(0);opacity:0}}
+.bubble-body{
+  border-radius:50%;border:2.5px solid var(--bc);
+  background:var(--bg);position:relative;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 18px var(--bc),inset 0 0 12px rgba(255,255,255,.08);
+}
+.bubble-body::before{
+  content:'';position:absolute;
+  width:42%;height:28%;top:12%;left:16%;
+  background:rgba(255,255,255,.55);
+  border-radius:50%;transform:rotate(-30deg);
+  filter:blur(1px);
+}
+.bubble-num{
+  font-size:.9rem;font-weight:900;color:rgba(255,255,255,.9);
+  text-shadow:0 0 8px var(--bc),0 1px 3px rgba(0,0,0,.4);
+  position:relative;z-index:2;
+}
+@keyframes bFloat{
+  0%,100%{transform:translateY(0) translateX(0) rotate(0deg)}
+  25%{transform:translateY(-14px) translateX(6px) rotate(1deg)}
+  50%{transform:translateY(-8px) translateX(-5px) rotate(-1deg)}
+  75%{transform:translateY(-18px) translateX(4px) rotate(.5deg)}
+}
+.bubble.bpopped{animation:bPop .45s ease-out forwards!important;pointer-events:none}
+@keyframes bPop{
+  0%{transform:scale(1);opacity:1;filter:brightness(2)}
+  35%{transform:scale(1.7);opacity:.8}
+  70%{transform:scale(2.3);opacity:.3}
+  100%{transform:scale(2.8);opacity:0}
+}
 .fbox{display:none;border-radius:14px;padding:13px 15px;border:3px solid;margin-bottom:8px;animation:sUp .3s ease}
 .fbox.show{display:block}
 .fn{font-size:.72rem;font-weight:700;opacity:.6;margin-bottom:3px}
 .ft{font-size:.93rem;font-weight:700;line-height:1.5}
-#bprog{text-align:center;font-size:.8rem;color:#555;margin-top:6px}
+#bprog{text-align:center;font-size:.8rem;color:#aac;margin-top:6px}
 
 /* ─────────────────────────────
    SCREEN 2 · FIND THE PART
@@ -277,13 +297,6 @@ body{font-family:'Segoe UI',sans-serif;overflow-x:hidden;color:#222}
 .fb-play{background:#ffeb3b;color:#1b5e20}
 .fb-home{background:rgba(255,255,255,.18);color:#fff;border:2px solid rgba(255,255,255,.35)}
 
-/* prompt guide */
-.prompt-guide{background:rgba(255,255,255,.1);border-radius:18px;padding:18px 16px;
-  border:2px solid rgba(255,255,255,.2);width:100%;max-width:500px;text-align:left}
-.pg-title{color:#ffeb3b;font-weight:800;margin-bottom:10px;font-size:.92rem;text-align:center}
-.pg-body{color:rgba(255,255,255,.82);font-size:.8rem;line-height:1.7}
-.pg-code{background:rgba(0,0,0,.35);border-radius:10px;padding:12px 14px;margin-top:10px;
-  font-family:monospace;font-size:.76rem;color:#a5d6a7;white-space:pre-wrap;line-height:1.6}
 
 /* particles */
 .ptcl{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:9999;animation:flyOut .52s ease-out forwards}
@@ -305,49 +318,29 @@ body{font-family:'Segoe UI',sans-serif;overflow-x:hidden;color:#222}
   100%{transform:translateY(115vh) translateX(-5px) rotate(480deg) scale(.5);opacity:0}
 }
 
-/* ── BLACK CLOUDS ── */
-.bcloud{
-  position:fixed;z-index:9994;pointer-events:none;
-  width:115px;height:54px;
+/* ── X FALL (wrong answer) ── */
+.xfall{
+  position:fixed;top:-60px;z-index:9994;pointer-events:none;font-weight:900;
+  animation:xDrop var(--dur,2.2s) ease-in var(--dl,0s) forwards;
 }
-.bcloud-b{
-  width:100%;height:100%;background:#1a1a2e;border-radius:54px;position:relative;
-  box-shadow:0 4px 20px rgba(0,0,0,.6);
+@keyframes xDrop{
+  0%  {transform:translateY(0) rotate(0deg) scale(1);opacity:1}
+  70% {opacity:1}
+  100%{transform:translateY(115vh) rotate(var(--rot,180deg)) scale(.7);opacity:0}
 }
-.bcloud-b::before{
-  content:'';position:absolute;
-  width:58px;height:58px;background:#1a1a2e;
-  border-radius:50%;top:-28px;left:16px;
-  box-shadow:0 2px 12px rgba(0,0,0,.5);
+
+/* ── QUIZ EMOJI POP ── */
+.qemoji{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  font-size:5.5rem;z-index:9998;pointer-events:none;
+  animation:qEmojiPop 1.5s ease forwards;
 }
-.bcloud-b::after{
-  content:'';position:absolute;
-  width:44px;height:44px;background:#1a1a2e;
-  border-radius:50%;top:-20px;right:12px;
-}
-.bcloud.cl{animation:cFromLeft var(--cd,2.3s) ease-in-out var(--cdl,0s) forwards}
-.bcloud.cr{animation:cFromRight var(--cd,2.1s) ease-in-out var(--cdl,0s) forwards}
-.bcloud.ct{animation:cFromTop var(--cd,2.4s) ease-in-out var(--cdl,0s) forwards}
-@keyframes cFromLeft{
-  0%{transform:translateX(-200px);opacity:0}
-  25%{opacity:.9}
-  55%{transform:translateX(28vw);opacity:.9}
-  80%{transform:translateX(52vw);opacity:.5}
-  100%{transform:translateX(80vw);opacity:0}
-}
-@keyframes cFromRight{
-  0%{transform:translateX(200px);opacity:0}
-  25%{opacity:.9}
-  55%{transform:translateX(-28vw);opacity:.9}
-  80%{transform:translateX(-52vw);opacity:.5}
-  100%{transform:translateX(-80vw);opacity:0}
-}
-@keyframes cFromTop{
-  0%{transform:translateY(-130px);opacity:0}
-  25%{opacity:.85}
-  55%{transform:translateY(24px);opacity:.85}
-  80%{transform:translateY(10px);opacity:.4}
-  100%{transform:translateY(-130px);opacity:0}
+@keyframes qEmojiPop{
+  0%  {transform:translate(-50%,-50%) scale(0);opacity:0}
+  18% {transform:translate(-50%,-50%) scale(1.35);opacity:1}
+  55% {transform:translate(-50%,-50%) scale(1);opacity:1}
+  100%{transform:translate(-50%,-50%) scale(.4);opacity:0}
 }
 </style>
 </head>
@@ -642,31 +635,6 @@ body{font-family:'Segoe UI',sans-serif;overflow-x:hidden;color:#222}
       <a href="index.html" class="f-btn fb-home" style="text-decoration:none">🏠 All Chapters</a>
     </div>
 
-    <!-- HOW TO ADD FUTURE CHAPTERS -->
-    <div class="prompt-guide">
-      <div class="pg-title">📋 How to Add the Next Chapter</div>
-      <div class="pg-body">
-        Give Claude the chapter PDF and paste this prompt:
-        <div class="pg-code">Chapter [NUMBER]: "[CHAPTER NAME]"
-Student: Shrenu Sinha, Class 3
-
-Scan the PDF and build a full gamified HTML chapter page like chapter-02-parts-of-a-plant.html in E:\Miks\Science\ with:
-- Chapter unlock riddle (1 question using a concept from this chapter)
-- 9 balloon pop facts (key facts from this chapter)
-- SVG diagram game (tap the correct part — label the main diagram)
-- Memory match (4 pairs: concept ↔ meaning)
-- Sorting game (classify items into 2 categories)
-- Lightning quiz (12 Qs, show 8, 25s timer)
-- Word scramble (6 key vocabulary words)
-- True or False (15 statements including key concepts, definitions, misconceptions)
-- Fill in the Blanks (10 questions on definitions and key terms)
-- Final score + wrong-answer explanations for every game
-- Games appear ONE AT A TIME (complete one → next unlocks)
-- Save as chapter-0X-[chapter-name].html in E:\Miks\Science\
-- Add chapter to index.html (unlock the Coming Soon card)
-- Extract key diagrams from PDF as assets/images/chXX_*.jpg</div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -788,23 +756,34 @@ function showStarsRain(){
 }
 
 // ────────────────────────────
-//  BLACK CLOUDS (wrong answer)
+//  X FALL (wrong answer)
 // ────────────────────────────
 function showBlackClouds(){
-  const cfgs=[
-    {cls:'cl',left:'-160px', top:'8%',  cd:'2.4s',cdl:'0s'},
-    {cls:'cr',right:'-160px',top:'20%', cd:'2.2s',cdl:'0.2s'},
-    {cls:'ct',left:'25%',    top:'-130px',cd:'2.6s',cdl:'0.1s'},
-    {cls:'cl',left:'-160px', top:'40%', cd:'2.1s',cdl:'0.35s'},
-  ];
-  cfgs.forEach(c=>{
+  const cols=['#000','#c62828','#000','#d32f2f','#1a1a1a','#b71c1c','#000'];
+  const chars=['✕','✖','×','✕','✖','✕','×'];
+  for(let i=0;i<16;i++){
     const el=document.createElement('div');
-    el.className='bcloud '+c.cls;
-    el.style.cssText=(c.left?'left:'+c.left:'right:'+c.right)+';top:'+c.top+';--cd:'+c.cd+';--cdl:'+c.cdl;
-    el.innerHTML='<div class="bcloud-b"></div>';
+    el.className='xfall';
+    el.textContent=chars[i%chars.length];
+    const sz=1.4+Math.random()*2;
+    const dur=1.6+Math.random()*1.4;
+    const dl=Math.random()*.9;
+    const rot=(Math.random()>.5?1:-1)*(90+Math.random()*180);
+    el.style.cssText=`left:${3+Math.random()*94}vw;color:${cols[i%cols.length]};font-size:${sz}rem;--dur:${dur}s;--dl:${dl}s;--rot:${rot}deg`;
     document.body.appendChild(el);
-    setTimeout(()=>el.remove(),3400);
-  });
+    setTimeout(()=>el.remove(),3500);
+  }
+}
+
+// ────────────────────────────
+//  QUIZ EMOJI POP
+// ────────────────────────────
+function showQuizEmoji(correct){
+  const el=document.createElement('div');
+  el.className='qemoji';
+  el.textContent=correct?'😄':'😢';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1600);
 }
 
 // ────────────────────────────────────────
@@ -839,31 +818,56 @@ const bFacts=[
   {c:'#00bcd4',text:'🍎 Every fruit starts as a flower! Flower → pollinates → grows into fruit! And every fruit has seeds inside.'},
   {c:'#ff5722',text:'🌱 GERMINATION = when a seed gets water + air + warmth and grows into a NEW PLANT. The baby plant inside the seed wakes up!'},
 ];
-const bL=[5,17,30,42,54,65,77,88,22],bD=[2.9,3.4,2.6,3.1,2.8,3.6,2.7,3.2,3.0],bdl=[0,.4,.8,.2,.6,.1,.5,.9,.3];
+// bubble colors: [border glow, bg tint]
+const bColors=[
+  ['#ff8a80','rgba(255,138,128,.18)'],['#82b1ff','rgba(130,177,255,.18)'],
+  ['#b9f6ca','rgba(185,246,202,.18)'],['#ffd180','rgba(255,209,128,.18)'],
+  ['#ea80fc','rgba(234,128,252,.18)'],['#84ffff','rgba(132,255,255,.18)'],
+  ['#ff80ab','rgba(255,128,171,.18)'],['#ccff90','rgba(204,255,144,.18)'],
+  ['#a7ffeb','rgba(167,255,235,.18)'],
+];
+// spread positions across the whole sky (left%, top%)
+const bPos=[[8,12],[22,58],[38,18],[55,65],[72,10],[85,48],[14,75],[50,38],[90,70]];
+const bSz =[64,72,58,68,76,62,70,66,74]; // px
+const bD  =[4.2,3.8,4.6,3.5,4.0,4.8,3.6,4.4,3.9];
+const bdl =[0,.5,1.1,.3,.8,1.4,.6,1.2,.2];
 let bPopped=0;
 
-(function initBalloons(){
+(function initBubbles(){
   const sky=document.getElementById('sky');
   bFacts.forEach((f,i)=>{
+    const [bc,bg]=bColors[i];
+    const sz=bSz[i];
     const w=document.createElement('div');
-    w.className='bal';w.style.cssText=`--bc:${f.c};--d:${bD[i]}s;--dl:${bdl[i]}s;left:${bL[i]}%;bottom:${18+(i%3)*14}px`;
-    w.innerHTML=`<div class="bal-body"><span class="bal-shine"></span><span class="bal-num">${i+1}</span></div><div class="bal-knot"></div><div class="bal-str"></div>`;
+    w.className='bubble';
+    w.style.cssText=`left:${bPos[i][0]}%;top:${bPos[i][1]}%;--d:${bD[i]}s;--dl:${bdl[i]}s;--bc:${bc};--bg:${bg};width:${sz}px;height:${sz}px`;
+    w.innerHTML=`<div class="bubble-body" style="width:${sz}px;height:${sz}px"><span class="bubble-num">${i+1}</span></div>`;
     w.onclick=()=>{
       if(w.dataset.done)return;w.dataset.done='1';
-      burst(w,f.c);w.classList.add('popped');
+      // water-drop burst: many small circles fly out
+      const r=w.getBoundingClientRect();
+      const cx=r.left+r.width/2,cy=r.top+r.height/2;
+      for(let j=0;j<16;j++){
+        const p=document.createElement('div');p.className='ptcl';
+        const ang=(j/16)*360,dist=35+Math.random()*45;
+        const psz=4+Math.random()*7;
+        p.style.cssText=`left:${cx}px;top:${cy}px;width:${psz}px;height:${psz}px;background:${bc};--dx:${Math.cos(ang*Math.PI/180)*dist}px;--dy:${Math.sin(ang*Math.PI/180)*dist}px`;
+        document.body.appendChild(p);setTimeout(()=>p.remove(),620);
+      }
+      w.classList.add('bpopped');
       showStarsRain();addStars(1);bPopped++;
-      document.getElementById('bprog').textContent=`🎈 ${bPopped} / 9 facts collected — keep going!`;
+      document.getElementById('bprog').textContent=`🫧 ${bPopped} / 9 bubbles popped!`;
       setTimeout(()=>{
         w.style.display='none';
         const fb=document.getElementById('fbox');
-        fb.style.borderColor=f.c;fb.style.background=f.c+'18';
+        fb.style.borderColor=bc;fb.style.background=bg.replace('.18','.35');
         fb.innerHTML=`<div class="fn">💡 Fact #${bPopped}</div><div class="ft">${f.text}</div>`;
         fb.className='fbox';void fb.offsetWidth;fb.classList.add('show');
         if(bPopped===9){
-          document.getElementById('bprog').textContent='🎉 All 9 facts collected! Amazing!';
-          showDone(1,'🎉 Facts Master!',9,'You popped every balloon! +9 stars!');
+          document.getElementById('bprog').textContent='🎉 All 9 bubbles popped! Amazing!';
+          showDone(1,'🎉 Bubble Master!',9,'You popped every bubble! +9 stars!');
         }
-      },370);
+      },420);
     };
     sky.appendChild(w);
   });
@@ -1090,7 +1094,7 @@ function loadQ(){
         document.querySelectorAll('.qo').forEach((b,i)=>{b.disabled=true;if(i===q.ans)b.classList.add('hl');});
         document.getElementById('qfb').style.color='#e65100';
         document.getElementById('qfb').textContent='⏰ Time\'s up! Answer: '+q.opts[q.ans].replace(/<[^>]+>/g,'')+'. '+q.exp;
-        showBlackClouds();
+        showBlackClouds();showQuizEmoji(false);
         setTimeout(()=>{qIdx++;qIdx>=NUM_Q?doneQ():loadQ();},2800);
       }
     }
@@ -1106,7 +1110,7 @@ function ansQ(btn,chosen,q){
     btn.classList.add('ok');
     document.getElementById('qfb').textContent='✅ Correct! '+q.exp;
     document.getElementById('qfb').style.color='#2e7d32';
-    if(dot)dot.classList.add('ok');addStars(1);qStars++;showStarsRain();
+    if(dot)dot.classList.add('ok');addStars(1);qStars++;showStarsRain();showQuizEmoji(true);
     setTimeout(()=>{qIdx++;qIdx>=NUM_Q?doneQ():loadQ();},2000);
   }else{
     btn.classList.add('no');
@@ -1114,7 +1118,7 @@ function ansQ(btn,chosen,q){
     if(dot)dot.classList.add('err');
     document.getElementById('qfb').textContent='❌ Answer: '+q.opts[q.ans].replace(/<[^>]+>/g,'')+'. '+q.exp;
     document.getElementById('qfb').style.color='#c62828';
-    showBlackClouds();
+    showBlackClouds();showQuizEmoji(false);
     setTimeout(()=>{qIdx++;qIdx>=NUM_Q?doneQ():loadQ();},2800);
   }
 }
