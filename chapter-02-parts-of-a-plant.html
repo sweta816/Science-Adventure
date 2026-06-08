@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>🌿 Chapter 2 – Parts of a Plant</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Segoe UI',sans-serif;overflow-x:hidden;color:#222}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;animation:sIn .35s ease}
+.screen.active{display:flex;flex-direction:column}
+@keyframes sIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── TOP BAR ── */
+#topbar{
+  position:sticky;top:0;z-index:200;
+  background:rgba(27,94,32,.97);backdrop-filter:blur(6px);
+  padding:8px 14px;display:flex;align-items:center;
+  justify-content:space-between;box-shadow:0 2px 14px rgba(0,0,0,.3);
+  flex-shrink:0;
+}
+.t-back{color:#fff;text-decoration:none;font-size:.8rem;font-weight:700;
+  background:rgba(255,255,255,.15);border-radius:10px;padding:5px 11px;white-space:nowrap}
+#gdots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.gdot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .3s}
+.gdot.done{background:#ffeb3b}
+.gdot.cur{background:#fff;transform:scale(1.3)}
+#star-top{font-size:.95rem;font-weight:800;color:#ffeb3b;white-space:nowrap}
+
+/* ── CONTENT WRAP ── */
+.wrap{max-width:660px;width:100%;margin:0 auto;padding:18px 14px;flex:1;display:flex;flex-direction:column}
+
+/* ── CARD ── */
+.gc{background:rgba(255,255,255,.95);border-radius:22px;padding:20px 16px;
+  box-shadow:0 6px 24px rgba(0,0,0,.14);flex:1}
+.gt{font-size:1.15rem;font-weight:900;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.gd{font-size:.82rem;color:#666;margin-bottom:14px}
+
+/* ── PROGRESS DOTS (per game) ── */
+.rdots{display:flex;gap:5px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+.rd{width:11px;height:11px;border-radius:50%;background:#ddd;transition:background .3s}
+.rd.ok{background:#4caf50}.rd.err{background:#f44336}.rd.cur{background:#ff9800;animation:rdP .9s infinite}
+@keyframes rdP{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+
+/* ── COMPLETION BANNER ── */
+.done-banner{display:none;background:linear-gradient(135deg,#43a047,#1b5e20);
+  color:#fff;border-radius:16px;padding:14px;text-align:center;margin-bottom:12px;animation:sUp .4s ease}
+.done-banner.show{display:block}
+.db-title{font-size:1.25rem;font-weight:900}
+.db-stars{font-size:1.6rem;margin:4px 0}
+.db-msg{font-size:.85rem;opacity:.88}
+
+/* ── NEXT BUTTON ── */
+.nxt-btn{display:none;width:100%;margin-top:14px;
+  background:linear-gradient(135deg,#ff8f00,#ffb300);color:#fff;
+  border:none;border-radius:18px;padding:16px;font-size:1.05rem;font-weight:900;
+  cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(255,140,0,.4);
+  animation:btnP .4s ease;-webkit-tap-highlight-color:transparent}
+.nxt-btn.show{display:block}
+@keyframes btnP{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes sUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+
+/* ─────────────────────────────
+   SCREEN 0 · UNLOCK
+───────────────────────────── */
+#s0{background:radial-gradient(ellipse at 50% 40%,#1b5e20 0%,#0a1a0a 100%)}
+.ulw{max-width:480px;width:100%;margin:0 auto;padding:28px 16px;flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ul-badge{color:#ffeb3b;font-size:.78rem;font-weight:800;letter-spacing:2px;margin-bottom:10px}
+.ul-lock{font-size:5rem;margin-bottom:14px;animation:lkFloat 2.2s ease-in-out infinite}
+@keyframes lkFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.ul-h1{color:#fff;font-size:clamp(1.6rem,5.5vw,2.4rem);font-weight:900;margin-bottom:6px}
+.ul-sub{color:rgba(255,255,255,.65);font-size:.85rem;margin-bottom:22px}
+.riddle{background:rgba(255,255,255,.1);backdrop-filter:blur(4px);
+  border:2px solid rgba(255,255,255,.22);border-radius:20px;padding:18px 16px;margin-bottom:18px;width:100%}
+.riddle-lbl{color:#ffeb3b;font-size:.75rem;font-weight:800;letter-spacing:1px;margin-bottom:8px}
+.riddle-q{color:#fff;font-size:.97rem;font-weight:700;line-height:1.55}
+.ul-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;margin-bottom:16px}
+.ul-opt{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);
+  border-radius:14px;padding:13px 8px;color:#fff;font-size:.9rem;font-weight:700;
+  cursor:pointer;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.ul-opt:hover{background:rgba(255,255,255,.22)}
+.ul-opt.c-ok{background:rgba(76,175,80,.5)!important;border-color:#4caf50!important}
+.ul-opt.c-no{background:rgba(244,67,54,.4)!important;border-color:#f44336!important}
+.ul-name{color:rgba(255,255,255,.4);font-size:.75rem}
+
+/* ─────────────────────────────
+   SCREEN 1 · BALLOONS
+───────────────────────────── */
+#s1{background:linear-gradient(180deg,#87ceeb 0%,#b3e5fc 60%,#e8f5e9 100%)}
+.sky{position:relative;height:265px;background:linear-gradient(180deg,#5c9bd6 0%,#90caf9 55%,#bbdefb 100%);
+  border-radius:16px;overflow:hidden;margin-bottom:12px}
+.cld{position:absolute;background:rgba(255,255,255,.82);border-radius:40px}
+.cld b{position:absolute;background:rgba(255,255,255,.82);border-radius:50%}
+.bal{position:absolute;bottom:20px;cursor:pointer;
+  animation:floatB var(--d,3s) ease-in-out infinite var(--dl,0s);
+  user-select:none;-webkit-tap-highlight-color:transparent}
+.bal-body{width:50px;height:64px;border-radius:50% 50% 48% 48%/55% 55% 45% 45%;
+  background:var(--bc);position:relative;display:flex;align-items:center;justify-content:center;
+  box-shadow:inset -6px -5px 0 rgba(0,0,0,.13),inset 5px 5px 0 rgba(255,255,255,.22)}
+.bal-shine{position:absolute;top:7px;left:8px;width:11px;height:16px;
+  background:rgba(255,255,255,.38);border-radius:50%;transform:rotate(-25deg)}
+.bal-num{font-size:1rem;font-weight:900;color:rgba(255,255,255,.93);text-shadow:0 1px 4px rgba(0,0,0,.3)}
+.bal-knot{width:9px;height:9px;border-radius:50%;background:var(--bc);margin:0 auto}
+.bal-str{width:1.5px;height:46px;background:rgba(0,0,0,.22);margin:0 auto}
+@keyframes floatB{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-20px) rotate(2deg)}}
+.bal.popped{animation:balPop .35s ease-out forwards!important;pointer-events:none}
+@keyframes balPop{0%{transform:scale(1);opacity:1}40%{transform:scale(1.4);opacity:.8}100%{transform:scale(0);opacity:0}}
+.fbox{display:none;border-radius:14px;padding:13px 15px;border:3px solid;margin-bottom:8px;animation:sUp .3s ease}
+.fbox.show{display:block}
+.fn{font-size:.72rem;font-weight:700;opacity:.6;margin-bottom:3px}
+.ft{font-size:.93rem;font-weight:700;line-height:1.5}
+#bprog{text-align:center;font-size:.8rem;color:#555;margin-top:6px}
+
+/* ─────────────────────────────
+   SCREEN 2 · FIND THE PART
+───────────────────────────── */
+#s2{background:linear-gradient(160deg,#e8f5e9,#f1f8e9)}
+.find-prompt{display:inline-block;font-size:1.15rem;font-weight:900;
+  padding:10px 20px;border-radius:16px;margin-bottom:11px;border:3px solid;animation:pPop .3s ease}
+@keyframes pPop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+#fpw{position:relative;display:inline-block}
+#fpw svg{max-width:270px;width:100%;height:auto}
+.phot{cursor:pointer}
+.phot circle{fill:rgba(255,255,255,.04);stroke:rgba(255,230,0,.8);stroke-width:3.5;stroke-dasharray:6 4}
+.phot:hover circle{fill:rgba(255,255,0,.14)}
+.phot.ok circle{fill:rgba(76,175,80,.45)!important;stroke:#4caf50!important;animation:zOk .5s ease}
+.phot.err circle{fill:rgba(244,67,54,.4)!important;stroke:#f44336!important;animation:shk .4s ease}
+@keyframes zOk{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+#ffb{font-weight:800;font-size:.9rem;margin-top:8px;min-height:22px;text-align:center}
+
+/* ─────────────────────────────
+   SCREEN 3 · MEMORY MATCH
+───────────────────────────── */
+#s3{background:linear-gradient(160deg,#e8f5e9,#f3e5f5)}
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mc{aspect-ratio:1;border-radius:12px;cursor:pointer;perspective:500px}
+.mc-in{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .35s ease}
+.mc.flip .mc-in{transform:rotateY(180deg)}
+.mc-f,.mc-b{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  backface-visibility:hidden;font-size:clamp(.6rem,2.2vw,.82rem);font-weight:700;padding:5px;text-align:center;line-height:1.3}
+.mc-f{background:linear-gradient(135deg,#1b5e20,#2e7d32);color:#fff;font-size:1.4rem}
+.mc-b{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);color:#1b5e20;transform:rotateY(180deg);border:2px solid #4caf50}
+.mc.matched .mc-b{background:linear-gradient(135deg,#4caf50,#66bb6a);color:#fff}
+.mc.matched .mc-in{animation:mBounce .35s ease}
+@keyframes mBounce{0%,100%{transform:rotateY(180deg) scale(1)}50%{transform:rotateY(180deg) scale(1.08)}}
+#mmsg{text-align:center;font-weight:800;font-size:.9rem;margin-top:10px;min-height:22px}
+
+/* ─────────────────────────────
+   SCREEN 4 · ROOT SORTER
+───────────────────────────── */
+#s4{background:linear-gradient(160deg,#fff3e0,#e8f5e9)}
+.sw{display:flex;flex-direction:column;align-items:center;gap:12px}
+#si{font-size:1.6rem;font-weight:900;padding:14px 30px;
+  background:linear-gradient(135deg,#fffde7,#fff9c4);
+  border-radius:18px;border:3px solid #ffc107;text-align:center;min-width:148px;animation:popIn .3s ease}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.bkts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.bkt{border-radius:16px;padding:14px 8px;text-align:center;cursor:pointer;font-weight:800;font-size:.85rem;
+  min-height:82px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  -webkit-tap-highlight-color:transparent}
+.bkt:active{transform:scale(.95)}
+.tapb{background:linear-gradient(135deg,#fff3e0,#ffe0b2);border:3px solid #ff9800;color:#e65100}
+.fibb{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:3px solid #4caf50;color:#1b5e20}
+.bkt .bi{font-size:1.7rem}.bkt .bn{font-size:.68rem;opacity:.7}.bkt .bs{font-size:.7rem;font-weight:700;margin-top:2px}
+.bkt.cf{animation:cF .4s ease}.bkt.wf{animation:wF .4s ease}
+@keyframes cF{0%,100%{filter:brightness(1)}50%{filter:brightness(1.38)}}
+@keyframes wF{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+#sfb{font-weight:800;font-size:.9rem;text-align:center;min-height:20px}
+#sprog{font-size:.8rem;color:#666;text-align:center}
+
+/* ─────────────────────────────
+   SCREEN 5 · LIGHTNING QUIZ
+───────────────────────────── */
+#s5{background:linear-gradient(160deg,#e3f2fd,#fce4ec)}
+#ttrack{height:10px;background:#eee;border-radius:10px;margin-bottom:12px;overflow:hidden}
+#tfill{height:100%;border-radius:10px;background:linear-gradient(90deg,#4caf50,#ffeb3b,#f44336);width:100%;transition:width .1s linear}
+#qq{font-weight:800;font-size:1rem;margin-bottom:12px;line-height:1.45}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.qo{background:#fff;border:2.5px solid #90caf9;border-radius:13px;
+  padding:12px 7px;font-size:.86rem;font-weight:700;cursor:pointer;text-align:center;
+  transition:all .15s;font-family:inherit}
+.qo:hover{background:#e3f2fd;border-color:#1565c0;transform:translateY(-2px)}
+.qo.ok{background:#c8e6c9;border-color:#2e7d32;color:#1b5e20;pointer-events:none}
+.qo.no{background:#ffcdd2;border-color:#c62828;color:#b71c1c;pointer-events:none}
+.qo.hl{background:#fff9c4;border-color:#ff9800;pointer-events:none}
+.qo:disabled{pointer-events:none}
+#qfb{font-weight:800;font-size:.88rem;text-align:center;margin-top:8px;min-height:20px}
+#qprog{font-size:.8rem;color:#666;text-align:center;margin-top:5px}
+
+/* ─────────────────────────────
+   SCREEN 6 · WORD SCRAMBLE
+───────────────────────────── */
+#s6{background:linear-gradient(160deg,#f3e5f5,#e8f5e9)}
+.scr-wrap{text-align:center}
+#scr-word{display:inline-flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;min-height:48px}
+.scr-tile{width:36px;height:40px;background:linear-gradient(135deg,#4a148c,#6a1b9a);color:#fff;
+  border-radius:9px;font-size:1.1rem;font-weight:900;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 8px rgba(0,0,0,.2);animation:tilePop .3s ease calc(var(--i)*.05s) both}
+@keyframes tilePop{from{transform:scale(0) rotate(180deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.scr-hint{font-size:.82rem;color:#666;margin-bottom:12px;font-style:italic}
+.scr-opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:8px}
+.scr-opt{background:#fff;border:2px solid #ce93d8;border-radius:20px;padding:9px 16px;
+  font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;color:#6a1b9a;transition:all .15s}
+.scr-opt:hover{background:#f3e5f5;border-color:#6a1b9a}
+.scr-opt.sok{background:#c8e6c9;border-color:#2e7d32;color:#1b5e20;pointer-events:none}
+.scr-opt.sno{background:#ffcdd2;border-color:#c62828;color:#b71c1c;pointer-events:none}
+#scr-fb{font-weight:800;font-size:.9rem;min-height:20px;text-align:center}
+#scr-prog{font-size:.8rem;color:#666;text-align:center;margin-top:5px}
+
+/* ─────────────────────────────
+   SCREEN 7 · TRUE OR FALSE
+───────────────────────────── */
+#s7{background:linear-gradient(160deg,#e3f2fd,#e8f5e9)}
+.tof-stmt-card{background:linear-gradient(135deg,#e3f2fd,#bbdefb);border-radius:16px;
+  padding:18px 15px;text-align:center;margin-bottom:14px;min-height:100px;
+  display:flex;align-items:center;justify-content:center;animation:pPop .3s ease}
+#tof-stmt{font-size:1rem;font-weight:800;line-height:1.45;color:#1a237e}
+.tof-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+.tof-btn{border:none;border-radius:16px;padding:17px 10px;font-size:1.05rem;font-weight:900;
+  cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.tof-btn:active{transform:scale(.94)}
+.true-btn{background:linear-gradient(135deg,#43a047,#66bb6a);color:#fff;box-shadow:0 4px 14px rgba(67,160,71,.3)}
+.false-btn{background:linear-gradient(135deg,#e53935,#ef5350);color:#fff;box-shadow:0 4px 14px rgba(229,57,53,.3)}
+.tof-btn.dim{opacity:.4;pointer-events:none}
+.tof-btn.gok{animation:glowOk .4s ease}
+.tof-btn.gno{animation:glowNo .4s ease}
+@keyframes glowOk{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes glowNo{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#tof-fb{font-weight:800;font-size:.9rem;min-height:20px;text-align:center}
+#tof-prog{font-size:.8rem;color:#666;text-align:center;margin-top:5px}
+
+/* ─────────────────────────────
+   SCREEN 8 · FILL IN THE BLANKS
+───────────────────────────── */
+#s8{background:linear-gradient(160deg,#fce4ec,#f3e5f5)}
+.fib-q-card{background:linear-gradient(135deg,#f3e5f5,#e8eaf6);border-radius:16px;
+  padding:16px 14px;margin-bottom:14px;font-size:.97rem;font-weight:800;color:#1a237e;
+  line-height:1.65;text-align:center;min-height:85px;display:flex;align-items:center;
+  justify-content:center;animation:pPop .3s ease}
+.blank{display:inline-block;min-width:90px;border-bottom:3px solid #7b1fa2;
+  padding:0 6px;color:#7b1fa2;font-style:italic}
+.fib-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:8px}
+.fib-opt{background:#fff;border:2.5px solid #ce93d8;border-radius:13px;
+  padding:12px 7px;font-size:.86rem;font-weight:700;cursor:pointer;text-align:center;
+  font-family:inherit;color:#6a1b9a;transition:all .15s}
+.fib-opt:hover{background:#f3e5f5;border-color:#6a1b9a}
+.fib-opt.ok{background:#c8e6c9;border-color:#2e7d32;color:#1b5e20;pointer-events:none}
+.fib-opt.no{background:#ffcdd2;border-color:#c62828;color:#b71c1c;pointer-events:none}
+.fib-opt.hl{background:#fff9c4;border-color:#ff9800;pointer-events:none}
+.fib-opt:disabled{pointer-events:none}
+#fib-fb{font-weight:800;font-size:.9rem;text-align:center;min-height:20px}
+#fib-prog{font-size:.8rem;color:#666;text-align:center;margin-top:5px}
+
+/* ─────────────────────────────
+   SCREEN 9 · FINAL
+───────────────────────────── */
+#s9{background:radial-gradient(ellipse at 50% 40%,#1b5e20 0%,#0a1a0a 100%)}
+.final-wrap{max-width:480px;width:100%;margin:0 auto;padding:28px 16px;flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.f-trophy{font-size:4rem;margin-bottom:10px;animation:lkFloat 2s ease-in-out infinite}
+@keyframes lkFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.f-name{color:rgba(255,255,255,.65);font-size:.85rem;margin-bottom:6px}
+.f-big{font-size:3.5rem;font-weight:900;color:#ffeb3b}
+.f-max{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:6px}
+.f-sr{font-size:2rem;margin:8px 0}
+.f-grade{color:rgba(255,255,255,.88);font-size:.95rem;line-height:1.55;margin-bottom:24px;max-width:380px}
+.f-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:28px}
+.f-btn{border:none;border-radius:30px;padding:13px 26px;font-size:.92rem;font-weight:800;
+  cursor:pointer;font-family:inherit;transition:transform .15s}
+.f-btn:hover{transform:scale(1.06)}
+.fb-play{background:#ffeb3b;color:#1b5e20}
+.fb-home{background:rgba(255,255,255,.18);color:#fff;border:2px solid rgba(255,255,255,.35)}
+
+/* prompt guide */
+.prompt-guide{background:rgba(255,255,255,.1);border-radius:18px;padding:18px 16px;
+  border:2px solid rgba(255,255,255,.2);width:100%;max-width:500px;text-align:left}
+.pg-title{color:#ffeb3b;font-weight:800;margin-bottom:10px;font-size:.92rem;text-align:center}
+.pg-body{color:rgba(255,255,255,.82);font-size:.8rem;line-height:1.7}
+.pg-code{background:rgba(0,0,0,.35);border-radius:10px;padding:12px 14px;margin-top:10px;
+  font-family:monospace;font-size:.76rem;color:#a5d6a7;white-space:pre-wrap;line-height:1.6}
+
+/* particles */
+.ptcl{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:9999;animation:flyOut .52s ease-out forwards}
+@keyframes flyOut{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+
+@media(max-width:420px){.qopts,.tof-btns,.bkts,.fib-opts,.ul-opts{grid-template-columns:1fr}}
+
+/* ── STAR RAIN ── */
+.srain{
+  position:fixed;top:-60px;z-index:9995;pointer-events:none;
+  animation:starFall var(--dur,1.2s) ease-out var(--dl,0s) forwards;
+  line-height:1;
+}
+@keyframes starFall{
+  0%{transform:translateY(0) rotate(0deg) scale(1.2);opacity:1}
+  75%{opacity:1}
+  100%{transform:translateY(110vh) rotate(540deg) scale(.6);opacity:0}
+}
+
+/* ── BLACK CLOUDS ── */
+.bcloud{
+  position:fixed;z-index:9994;pointer-events:none;
+  width:115px;height:54px;
+}
+.bcloud-b{
+  width:100%;height:100%;background:#1a1a2e;border-radius:54px;position:relative;
+  box-shadow:0 4px 20px rgba(0,0,0,.6);
+}
+.bcloud-b::before{
+  content:'';position:absolute;
+  width:58px;height:58px;background:#1a1a2e;
+  border-radius:50%;top:-28px;left:16px;
+  box-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.bcloud-b::after{
+  content:'';position:absolute;
+  width:44px;height:44px;background:#1a1a2e;
+  border-radius:50%;top:-20px;right:12px;
+}
+.bcloud.cl{animation:cFromLeft var(--cd,2.3s) ease-in-out var(--cdl,0s) forwards}
+.bcloud.cr{animation:cFromRight var(--cd,2.1s) ease-in-out var(--cdl,0s) forwards}
+.bcloud.ct{animation:cFromTop var(--cd,2.4s) ease-in-out var(--cdl,0s) forwards}
+@keyframes cFromLeft{
+  0%{transform:translateX(-200px);opacity:0}
+  25%{opacity:.9}
+  55%{transform:translateX(28vw);opacity:.9}
+  80%{transform:translateX(52vw);opacity:.5}
+  100%{transform:translateX(80vw);opacity:0}
+}
+@keyframes cFromRight{
+  0%{transform:translateX(200px);opacity:0}
+  25%{opacity:.9}
+  55%{transform:translateX(-28vw);opacity:.9}
+  80%{transform:translateX(-52vw);opacity:.5}
+  100%{transform:translateX(-80vw);opacity:0}
+}
+@keyframes cFromTop{
+  0%{transform:translateY(-130px);opacity:0}
+  25%{opacity:.85}
+  55%{transform:translateY(24px);opacity:.85}
+  80%{transform:translateY(10px);opacity:.4}
+  100%{transform:translateY(-130px);opacity:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div id="topbar">
+  <a href="index.html" class="t-back">← Home</a>
+  <div id="gdots"></div>
+  <div id="star-top">⭐ <span id="sc">0</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  SCREEN 0 · CHAPTER UNLOCK
+══════════════════════════════════ -->
+<div id="s0" class="screen active">
+  <div class="ulw">
+    <div class="ul-badge">📗 CHAPTER 2 · SCIENCE CLASS 3</div>
+    <div class="ul-lock" id="ul-lock">🔐</div>
+    <div class="ul-h1">Parts of a Plant</div>
+    <div class="ul-sub">Shrenu Sinha · 8 Fun Games Inside!</div>
+    <div class="riddle">
+      <div class="riddle-lbl">🔐 SOLVE THE RIDDLE TO UNLOCK!</div>
+      <div class="riddle-q">I am green, I live inside every leaf, and I give leaves their beautiful colour. I help leaves make food using sunlight. What am I? 🌿</div>
+    </div>
+    <div class="ul-opts" id="ul-opts">
+      <button class="ul-opt" onclick="unlockAns(this,'Stomata')">Stomata</button>
+      <button class="ul-opt" onclick="unlockAns(this,'Germination')">Germination</button>
+      <button class="ul-opt" onclick="unlockAns(this,'Chlorophyll')">Chlorophyll</button>
+      <button class="ul-opt" onclick="unlockAns(this,'Photosynthesis')">Photosynthesis</button>
+    </div>
+    <div id="ul-msg" style="display:none;color:#ff8f00;font-size:.85rem;font-weight:700;margin-top:8px;padding:10px 14px;background:rgba(255,143,0,.12);border-radius:10px;border:1.5px solid rgba(255,143,0,.4)"></div>
+    <div class="ul-name">👧 Made with ❤️ for Shrenu Sinha</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  SCREEN 1 · BALLOON POP
+══════════════════════════════════ -->
+<div id="s1" class="screen">
+  <div class="wrap">
+    <div class="done-banner" id="db1">
+      <div class="db-title">🎉 All Facts Collected!</div>
+      <div class="db-stars">⭐⭐⭐⭐⭐⭐⭐⭐⭐</div>
+      <div class="db-msg">+9 stars! You're a fact collector! 🏆</div>
+    </div>
+    <div class="gc">
+      <div class="gt">🎈 Balloon Pop Facts!</div>
+      <div class="gd">Pop all 9 balloons to collect plant facts! +1 ⭐ each · Complete all to continue</div>
+      <div class="sky" id="sky">
+        <div class="cld" style="width:88px;height:22px;top:18px;left:8%">
+          <b style="width:38px;height:34px;top:-18px;left:8px"></b>
+          <b style="width:28px;height:24px;top:-13px;left:36px"></b>
+        </div>
+        <div class="cld" style="width:62px;height:18px;top:35px;right:12%">
+          <b style="width:28px;height:24px;top:-13px;left:7px"></b>
+          <b style="width:21px;height:18px;top:-9px;left:26px"></b>
+        </div>
+        <div class="cld" style="width:50px;height:15px;top:10px;left:44%">
+          <b style="width:22px;height:20px;top:-11px;left:5px"></b>
+          <b style="width:17px;height:15px;top:-8px;left:22px"></b>
+        </div>
+      </div>
+      <div class="fbox" id="fbox"></div>
+      <div id="bprog">🎈 Pop all 9 balloons!</div>
+    </div>
+    <button class="nxt-btn" id="nb1" onclick="goTo(2)">🎯 Next Game: Find the Part →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  SCREEN 2 · FIND THE PART
+══════════════════════════════════ -->
+<div id="s2" class="screen">
+  <div class="wrap">
+    <div class="done-banner" id="db2"></div>
+    <div class="gc" id="fg" style="text-align:center">
+      <div class="gt" style="justify-content:center">🎯 Find the Part!</div>
+      <div class="gd">Read the name — then TAP that part on the plant! · 5 rounds · +1 ⭐ each</div>
+      <div class="rdots" id="f-rdots"></div>
+      <div id="fp" class="find-prompt">Loading…</div>
+      <div id="fpw">
+        <svg viewBox="0 0 300 430" xmlns="http://www.w3.org/2000/svg">
+          <rect width="300" height="430" fill="#f1f8e9" rx="14"/>
+          <circle cx="262" cy="33" r="22" fill="#ffd54f" opacity=".85"/>
+          <g stroke="#ffd54f" stroke-width="2.5" stroke-linecap="round" opacity=".7">
+            <line x1="262" y1="5" x2="262" y2="0"/><line x1="262" y1="61" x2="262" y2="68"/>
+            <line x1="234" y1="33" x2="228" y2="33"/><line x1="290" y1="33" x2="296" y2="33"/>
+            <line x1="242" y1="13" x2="238" y2="9"/><line x1="282" y1="53" x2="286" y2="57"/>
+            <line x1="282" y1="13" x2="286" y2="9"/><line x1="242" y1="53" x2="238" y2="57"/>
+          </g>
+          <rect x="0" y="285" width="300" height="145" fill="#8d6e63"/>
+          <path d="M0 285 Q28 278 56 285 Q84 292 112 285 Q140 278 168 285 Q196 292 224 285 Q252 278 300 283 L300 298 L0 298Z" fill="#a5d6a7"/>
+          <ellipse cx="50" cy="306" rx="4" ry="3" fill="#795548" opacity=".4"/>
+          <ellipse cx="120" cy="328" rx="3" ry="2" fill="#795548" opacity=".4"/>
+          <ellipse cx="200" cy="304" rx="4" ry="3" fill="#795548" opacity=".4"/>
+          <g stroke="#5d4037" stroke-width="4.5" fill="none" stroke-linecap="round">
+            <path d="M148 288 Q126 314 104 336"/>
+            <path d="M152 288 Q174 316 196 338"/>
+            <path d="M150 288 Q148 322 146 360"/>
+            <path d="M104 336 Q88 350 80 370"/>
+            <path d="M196 338 Q212 352 220 370"/>
+          </g>
+          <g stroke="#795548" stroke-width="1.5" fill="none" stroke-linecap="round">
+            <line x1="80" y1="358" x2="64" y2="365"/><line x1="80" y1="358" x2="78" y2="376"/>
+            <line x1="220" y1="358" x2="236" y2="364"/><line x1="146" y1="362" x2="138" y2="378"/>
+          </g>
+          <rect x="140" y="92" width="20" height="196" rx="7" fill="#4caf50"/>
+          <rect x="143" y="94" width="5" height="190" rx="3" fill="#81c784" opacity=".45"/>
+          <path d="M146 160 Q106 142 74 118" stroke="#4caf50" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <path d="M154 132 Q196 114 228 96" stroke="#4caf50" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <ellipse cx="58" cy="110" rx="30" ry="14" fill="#43a047" transform="rotate(-28 58 110)"/>
+          <line x1="58" y1="95" x2="58" y2="125" stroke="#a5d6a7" stroke-width="2" transform="rotate(-28 58 110)"/>
+          <ellipse cx="242" cy="88" rx="30" ry="14" fill="#66bb6a" transform="rotate(22 242 88)"/>
+          <ellipse cx="110" cy="200" rx="34" ry="14" fill="#388e3c" transform="rotate(-34 110 200)"/>
+          <line x1="148" y1="196" x2="76" y2="204" stroke="#c8e6c9" stroke-width="2" transform="rotate(-34 110 200)"/>
+          <ellipse cx="192" cy="225" rx="32" ry="13" fill="#43a047" transform="rotate(30 192 225)"/>
+          <ellipse cx="108" cy="248" rx="26" ry="11" fill="#2e7d32" transform="rotate(-24 108 248)"/>
+          <g transform="translate(150,58)">
+            <ellipse cx="0" cy="-24" rx="11" ry="14" fill="#f48fb1" opacity=".92"/>
+            <ellipse cx="0" cy="24" rx="11" ry="14" fill="#f48fb1" opacity=".92"/>
+            <ellipse cx="-24" cy="0" rx="14" ry="11" fill="#ec407a" opacity=".92"/>
+            <ellipse cx="24" cy="0" rx="14" ry="11" fill="#ec407a" opacity=".92"/>
+            <ellipse cx="-17" cy="-17" rx="11" ry="14" fill="#f06292" opacity=".9" transform="rotate(-45 -17 -17)"/>
+            <ellipse cx="17" cy="-17" rx="11" ry="14" fill="#f06292" opacity=".9" transform="rotate(45 17 -17)"/>
+            <ellipse cx="-17" cy="17" rx="11" ry="14" fill="#f48fb1" opacity=".9" transform="rotate(45 -17 17)"/>
+            <ellipse cx="17" cy="17" rx="11" ry="14" fill="#f48fb1" opacity=".9" transform="rotate(-45 17 17)"/>
+            <circle cx="0" cy="0" r="15" fill="#ffb300"/>
+            <circle cx="0" cy="0" r="11" fill="#ff8f00"/>
+          </g>
+          <ellipse cx="68" cy="93" rx="15" ry="20" fill="#7b1fa2"/>
+          <ellipse cx="63" cy="84" rx="8" ry="6" fill="#9c27b0" opacity=".5"/>
+          <path d="M68 73 Q66 62 70 56" stroke="#43a047" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- HOTSPOTS -->
+          <g class="phot" id="ph_flower" onclick="findTap('flower')"><circle cx="150" cy="58" r="42"/></g>
+          <g class="phot" id="ph_fruit"  onclick="findTap('fruit')"><circle cx="68" cy="90" r="36"/></g>
+          <g class="phot" id="ph_leaf"   onclick="findTap('leaf')"><circle cx="100" cy="205" r="40"/></g>
+          <g class="phot" id="ph_stem"   onclick="findTap('stem')"><circle cx="193" cy="215" r="36"/></g>
+          <g class="phot" id="ph_root"   onclick="findTap('root')"><circle cx="150" cy="340" r="46"/></g>
+        </svg>
+      </div>
+      <div id="ffb"></div>
+    </div>
+    <button class="nxt-btn" id="nb2" onclick="goTo(3)">🃏 Next Game: Flip &amp; Match →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  SCREEN 3 · MEMORY MATCH
+══════════════════════════════════ -->
+<div id="s3" class="screen">
+  <div class="wrap">
+    <div class="done-banner" id="db3"></div>
+    <div class="gc">
+      <div class="gt">🃏 Flip &amp; Match!</div>
+      <div class="gd">Match each plant part with its job! Tap to flip. Find all 4 pairs! · +3 ⭐</div>
+      <div class="cg" id="cgrid"></div>
+      <div id="mmsg"></div>
+    </div>
+    <button class="nxt-btn" id="nb3" onclick="goTo(4)">🗃️ Next Game: Root Sorter →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  SCREEN 4 · ROOT SORTER
+══════════════════════════════════ -->
+<div id="s4" class="screen">
+  <div class="wrap">
+    <div class="done-banner" id="db4"></div>
+    <div class="gc">
+      <div class="gt">🗃️ Sort the Roots!</div>
+      <div class="gd">Tap root or Fibrous root? Sort all 8 plants correctly! · +1 ⭐ each correct</div>
+      <div class="sw">
+        <div id="si">🌀</div>
+        <div class="bkts">
+          <div class="bkt tapb" onclick="sortAns('tap')">
+            <div class="bi">🌿</div><div>TAP ROOT</div>
+            <div class="bn">One thick main root</div>
+            <div class="bs" id="tsc">0 ✓</div>
+          </div>
+          <div class="bkt fibb" onclick="sortAns('fibrous')">
+            <div class="bi">🌾</div><div>FIBROUS ROOT</div>
+            <div class="bn">Many thin roots</div>
+            <div class="bs" id="fsc">0 ✓</div>
+          </div>
+        </div>
+        <div id="sfb"></div>
+        <div id="sprog">Plant 1 of 8</div>
+      </div>
+    </div>
+    <button class="nxt-btn" id="nb4" onclick="goTo(5)">⚡ Next Game: Lightning Quiz →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  SCREEN 5 · LIGHTNING QUIZ
+══════════════════════════════════ -->
+<div id="s5" class="screen">
+  <div class="wrap">
+    <div class="done-banner" id="db5"></div>
+    <div class="gc">
+      <div class="gt">⚡ Lightning Quiz!</div>
+      <div class="gd">12 questions in the bank — 8 shown! 25 seconds each. +1 ⭐ per correct!</div>
+      <div class="rdots" id="q-rdots"></div>
+      <div id="ttrack"><div id="tfill"></div></div>
+      <div id="qq">Loading…</div>
+      <div class="qopts" id="qopts"></div>
+      <div id="qfb"></div>
+      <div id="qprog">Question 1 of 8</div>
+    </div>
+    <button class="nxt-btn" id="nb5" onclick="goTo(6)">🔤 Next Game: Word Scramble →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  SCREEN 6 · WORD SCRAMBLE
+══════════════════════════════════ -->
+<div id="s6" class="screen">
+  <div class="wrap">
+    <div class="done-banner" id="db6"></div>
+    <div class="gc">
+      <div class="gt">🔤 Word Scramble!</div>
+      <div class="gd">Unscramble the jumbled plant word! Pick the correct answer. · +1 ⭐ each</div>
+      <div class="scr-wrap">
+        <div class="rdots" id="s-rdots"></div>
+        <div id="scr-word"></div>
+        <div class="scr-hint" id="scr-hint"></div>
+        <div class="scr-opts" id="scr-opts"></div>
+        <div id="scr-fb"></div>
+        <div id="scr-prog">Word 1 of 6</div>
+      </div>
+    </div>
+    <button class="nxt-btn" id="nb6" onclick="goTo(7)">✅ Next Game: True or False →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  SCREEN 7 · TRUE OR FALSE
+══════════════════════════════════ -->
+<div id="s7" class="screen">
+  <div class="wrap">
+    <div class="done-banner" id="db7"></div>
+    <div class="gc">
+      <div class="gt">✅ True or False?</div>
+      <div class="gd">Is the statement TRUE or FALSE? 15 rounds! · +1 ⭐ each correct</div>
+      <div class="rdots" id="tof-rdots"></div>
+      <div class="tof-stmt-card"><div id="tof-stmt">Loading…</div></div>
+      <div class="tof-btns">
+        <button class="tof-btn true-btn" id="btn-t" onclick="tofAns(true)">✅ TRUE</button>
+        <button class="tof-btn false-btn" id="btn-f" onclick="tofAns(false)">❌ FALSE</button>
+      </div>
+      <div id="tof-fb"></div>
+      <div id="tof-prog">Statement 1 of 15</div>
+    </div>
+    <button class="nxt-btn" id="nb7" onclick="goTo(8)">✏️ Next Game: Fill in the Blanks →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  SCREEN 8 · FILL IN THE BLANKS
+══════════════════════════════════ -->
+<div id="s8" class="screen">
+  <div class="wrap">
+    <div class="done-banner" id="db8"></div>
+    <div class="gc">
+      <div class="gt">✏️ Fill in the Blanks!</div>
+      <div class="gd">Pick the correct word to fill each blank! · 10 questions · +1 ⭐ each</div>
+      <div class="rdots" id="fib-rdots"></div>
+      <div class="fib-q-card"><div id="fib-q">Loading…</div></div>
+      <div class="fib-opts" id="fib-opts"></div>
+      <div id="fib-fb"></div>
+      <div id="fib-prog">Question 1 of 10</div>
+    </div>
+    <button class="nxt-btn" id="nb8" onclick="goTo(9)">🏆 See My Final Score! →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  SCREEN 9 · FINAL SCORE
+══════════════════════════════════ -->
+<div id="s9" class="screen">
+  <div class="final-wrap">
+    <div class="f-trophy">🏆</div>
+    <div class="f-name">👧 Shrenu Sinha · Chapter 2 Complete!</div>
+    <div class="f-big"><span id="fs">0</span></div>
+    <div class="f-max" id="f-max">out of 52 stars</div>
+    <div class="f-sr" id="f-sr"></div>
+    <div class="f-grade" id="f-grade"></div>
+    <div class="f-btns">
+      <button class="f-btn fb-play" onclick="location.reload()">🔄 Play Again</button>
+      <a href="index.html" class="f-btn fb-home" style="text-decoration:none">🏠 All Chapters</a>
+    </div>
+
+    <!-- HOW TO ADD FUTURE CHAPTERS -->
+    <div class="prompt-guide">
+      <div class="pg-title">📋 How to Add the Next Chapter</div>
+      <div class="pg-body">
+        Give Claude the chapter PDF and paste this prompt:
+        <div class="pg-code">Chapter [NUMBER]: "[CHAPTER NAME]"
+Student: Shrenu Sinha, Class 3
+
+Scan the PDF and build a full gamified HTML chapter page like chapter-02-parts-of-a-plant.html in E:\Miks\Science\ with:
+- Chapter unlock riddle (1 question using a concept from this chapter)
+- 9 balloon pop facts (key facts from this chapter)
+- SVG diagram game (tap the correct part — label the main diagram)
+- Memory match (4 pairs: concept ↔ meaning)
+- Sorting game (classify items into 2 categories)
+- Lightning quiz (12 Qs, show 8, 25s timer)
+- Word scramble (6 key vocabulary words)
+- True or False (15 statements including key concepts, definitions, misconceptions)
+- Fill in the Blanks (10 questions on definitions and key terms)
+- Final score + wrong-answer explanations for every game
+- Games appear ONE AT A TIME (complete one → next unlocks)
+- Save as chapter-0X-[chapter-name].html in E:\Miks\Science\
+- Add chapter to index.html (unlock the Coming Soon card)
+- Extract key diagrams from PDF as assets/images/chXX_*.jpg</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  JAVASCRIPT
+══════════════════════════════════ -->
+<script>
+'use strict';
+
+// ────────────────────────────
+//  GLOBAL STATE
+// ────────────────────────────
+let stars = 0;
+let quizStarted = false;
+const GAMES = 8; // screens 1-8
+
+// Build top-bar game dots (for games 1-8)
+(function(){
+  const d = document.getElementById('gdots');
+  for(let i=1;i<=GAMES;i++){
+    const dot = document.createElement('div');
+    dot.className = 'gdot';
+    dot.id = 'dot'+i;
+    d.appendChild(dot);
+  }
+})();
+
+// ────────────────────────────
+//  NAVIGATION
+// ────────────────────────────
+function goTo(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  // update dots
+  for(let i=1;i<=GAMES;i++){
+    const d=document.getElementById('dot'+i);
+    if(!d) continue;
+    d.classList.remove('cur','done');
+    if(i<n) d.classList.add('done');
+    else if(i===n) d.classList.add('cur');
+  }
+  // start quiz timer only when user actually reaches screen 5
+  if(n===5 && !quizStarted){ quizStarted=true; loadQ(); }
+}
+
+// ────────────────────────────
+//  STARS
+// ────────────────────────────
+function addStars(n){
+  stars+=n;
+  document.getElementById('sc').textContent=stars;
+  document.getElementById('fs').textContent=stars;
+  updateFinalGrade();
+}
+
+function updateFinalGrade(){
+  const g = stars>=46?'🌟 PERFECT! You\'re a Plant Science Expert!':
+            stars>=36?'🎉 Brilliant! Outstanding performance, Shrenu!':
+            stars>=24?'😊 Great job! You know your plants really well!':
+                      '💪 Keep practicing — you\'re getting there!';
+  const sr= stars>=46?'⭐⭐⭐':stars>=36?'⭐⭐':'⭐';
+  const el=document.getElementById('f-grade'); if(el) el.textContent=g;
+  const se=document.getElementById('f-sr');    if(se) se.textContent=sr;
+}
+
+// ────────────────────────────
+//  COMPLETION BANNER
+// ────────────────────────────
+function showDone(id, title, starsGot, msg){
+  const b=document.getElementById('db'+id);
+  if(!b) return;
+  b.innerHTML=`<div class="db-title">${title}</div><div class="db-stars">${'⭐'.repeat(Math.min(starsGot,15))}</div><div class="db-msg">${msg}</div>`;
+  b.classList.add('show');
+  const nb=document.getElementById('nb'+id);
+  if(nb) nb.classList.add('show');
+}
+
+// ────────────────────────────
+//  PARTICLES
+// ────────────────────────────
+function burst(el,color){
+  const r=el.getBoundingClientRect();
+  const cx=r.left+r.width/2,cy=r.top+r.height/2;
+  const cols=[color,'#ffeb3b','#fff','#ffcc80','#b2ebf2'];
+  for(let i=0;i<12;i++){
+    const p=document.createElement('div');p.className='ptcl';
+    const ang=(i/12)*360,dist=44+Math.random()*32;
+    p.style.cssText=`left:${cx}px;top:${cy}px;background:${cols[i%cols.length]};--dx:${Math.cos(ang*Math.PI/180)*dist}px;--dy:${Math.sin(ang*Math.PI/180)*dist}px`;
+    document.body.appendChild(p);setTimeout(()=>p.remove(),580);
+  }
+}
+
+// ────────────────────────────
+//  STAR RAIN (correct answer)
+// ────────────────────────────
+function showStarsRain(){
+  const emojis=['⭐','🌟','✨','💫','🎊','🎉','🏆','🎯','💥','🌈'];
+  const cols=['#ff5252','#ff9800','#ffeb3b','#4caf50','#2196f3','#9c27b0','#e91e63','#00bcd4','#ff80ab'];
+  for(let i=0;i<22;i++){
+    const el=document.createElement('div');
+    el.className='srain';
+    if(Math.random()>.38){
+      el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      el.style.fontSize=(1+Math.random()*1.5)+'rem';
+    }else{
+      const sz=8+Math.random()*10;
+      el.style.width=sz+'px';el.style.height=sz+'px';
+      el.style.borderRadius='50%';
+      el.style.background=cols[Math.floor(Math.random()*cols.length)];
+    }
+    const dur=0.9+Math.random()*.85,dl=Math.random()*.75;
+    el.style.left=(2+Math.random()*96)+'vw';
+    el.style.setProperty('--dur',dur+'s');
+    el.style.setProperty('--dl',dl+'s');
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),(dur+dl)*1000+200);
+  }
+}
+
+// ────────────────────────────
+//  BLACK CLOUDS (wrong answer)
+// ────────────────────────────
+function showBlackClouds(){
+  const cfgs=[
+    {cls:'cl',left:'-160px', top:'8%',  cd:'2.4s',cdl:'0s'},
+    {cls:'cr',right:'-160px',top:'20%', cd:'2.2s',cdl:'0.2s'},
+    {cls:'ct',left:'25%',    top:'-130px',cd:'2.6s',cdl:'0.1s'},
+    {cls:'cl',left:'-160px', top:'40%', cd:'2.1s',cdl:'0.35s'},
+  ];
+  cfgs.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='bcloud '+c.cls;
+    el.style.cssText=(c.left?'left:'+c.left:'right:'+c.right)+';top:'+c.top+';--cd:'+c.cd+';--cdl:'+c.cdl;
+    el.innerHTML='<div class="bcloud-b"></div>';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3400);
+  });
+}
+
+// ────────────────────────────────────────
+//  GAME 0 · UNLOCK
+// ────────────────────────────────────────
+function unlockAns(btn, chosen){
+  if(btn.classList.contains('c-ok')||btn.classList.contains('c-no')) return;
+  if(chosen==='Chlorophyll'){
+    btn.classList.add('c-ok');
+    document.getElementById('ul-lock').textContent='🔓';
+    document.querySelectorAll('.ul-opt').forEach(b=>b.style.pointerEvents='none');
+    setTimeout(()=>goTo(1),1400);
+  } else {
+    btn.classList.add('c-no');
+    const msg=document.getElementById('ul-msg');
+    if(msg){msg.textContent='❌ Not quite! Chlorophyll is the green pigment in leaves — it captures sunlight to make food. Try again!';msg.style.display='block';}
+    setTimeout(()=>{ btn.classList.remove('c-no'); if(msg)msg.style.display='none'; }, 2500);
+  }
+}
+
+// ────────────────────────────────────────
+//  GAME 1 · BALLOON POP
+// ────────────────────────────────────────
+const bFacts=[
+  {c:'#f44336',text:'🍃 Leaves are the FOOD FACTORY! They cook food using sunlight + water + CO₂. This amazing process is called PHOTOSYNTHESIS!'},
+  {c:'#ff9800',text:'💧 Roots drink up water and minerals from deep inside the soil — just like a straw! Without roots, plants would die!'},
+  {c:'#ffc107',text:'🥔 SURPRISE! Potato & Ginger grow underground but they are STEMS, not roots. They store food for the plant!'},
+  {c:'#4caf50',text:'🌸 The RAFFLESIA flower is the BIGGEST flower in the world! It can be as wide as a car tyre — amazing!'},
+  {c:'#2196f3',text:'☀️ Leaves breathe through tiny holes called STOMATA on their lower surface. They take in CO₂ and release oxygen!'},
+  {c:'#9c27b0',text:'🌱 TAP ROOT = one thick root going straight down (Mango, Neem, Cotton). FIBROUS ROOT = many thin roots (Grass, Wheat, Rice)!'},
+  {c:'#e91e63',text:'🥕 Carrots, Radish & Turnip are ROOTS we eat! Some roots store food, making them delicious and nutritious!'},
+  {c:'#00bcd4',text:'🍎 Every fruit starts as a flower! Flower → pollinates → grows into fruit! And every fruit has seeds inside.'},
+  {c:'#ff5722',text:'🌱 GERMINATION = when a seed gets water + air + warmth and grows into a NEW PLANT. The baby plant inside the seed wakes up!'},
+];
+const bL=[5,17,30,42,54,65,77,88,22],bD=[2.9,3.4,2.6,3.1,2.8,3.6,2.7,3.2,3.0],bdl=[0,.4,.8,.2,.6,.1,.5,.9,.3];
+let bPopped=0;
+
+(function initBalloons(){
+  const sky=document.getElementById('sky');
+  bFacts.forEach((f,i)=>{
+    const w=document.createElement('div');
+    w.className='bal';w.style.cssText=`--bc:${f.c};--d:${bD[i]}s;--dl:${bdl[i]}s;left:${bL[i]}%;bottom:${18+(i%3)*14}px`;
+    w.innerHTML=`<div class="bal-body"><span class="bal-shine"></span><span class="bal-num">${i+1}</span></div><div class="bal-knot"></div><div class="bal-str"></div>`;
+    w.onclick=()=>{
+      if(w.dataset.done)return;w.dataset.done='1';
+      burst(w,f.c);w.classList.add('popped');
+      showStarsRain();addStars(1);bPopped++;
+      document.getElementById('bprog').textContent=`🎈 ${bPopped} / 9 facts collected — keep going!`;
+      setTimeout(()=>{
+        w.style.display='none';
+        const fb=document.getElementById('fbox');
+        fb.style.borderColor=f.c;fb.style.background=f.c+'18';
+        fb.innerHTML=`<div class="fn">💡 Fact #${bPopped}</div><div class="ft">${f.text}</div>`;
+        fb.className='fbox';void fb.offsetWidth;fb.classList.add('show');
+        if(bPopped===9){
+          document.getElementById('bprog').textContent='🎉 All 9 facts collected! Amazing!';
+          showDone(1,'🎉 Facts Master!',9,'You popped every balloon! +9 stars!');
+        }
+      },370);
+    };
+    sky.appendChild(w);
+  });
+})();
+
+// ────────────────────────────────────────
+//  GAME 2 · FIND THE PART
+// ────────────────────────────────────────
+const fRounds=[
+  {p:'root',  lbl:'🌱 ROOT',  col:'#5d4037',exp:'Roots grow underground. They hold the plant in soil and absorb water and minerals. Without roots, a plant would fall over!'},
+  {p:'flower',lbl:'🌸 FLOWER',col:'#e91e63',exp:'Flowers are the most beautiful part! They attract insects with their colours and fragrance. Flowers then develop into fruits!'},
+  {p:'leaf',  lbl:'🍃 LEAF',  col:'#2e7d32',exp:'Leaves are the food factory! They make food using sunlight, water and CO₂ through photosynthesis. Chlorophyll makes them green!'},
+  {p:'stem',  lbl:'🌿 STEM',  col:'#388e3c',exp:'The stem supports the plant and helps it stand upright. It also carries water from roots to leaves and food from leaves to all parts!'},
+  {p:'fruit', lbl:'🍇 FRUIT', col:'#7b1fa2',exp:'Fruits are the delicious part! Every fruit develops from a flower and contains seeds inside. Some fruits have one seed (mango), some have many (watermelon)!'},
+];
+const allPts=['flower','fruit','leaf','stem','root'];
+let fIdx=0,fAns=false,fStars=0;
+
+(function initFind(){
+  // build dots
+  const dt=document.getElementById('f-rdots');
+  for(let i=0;i<5;i++){const d=document.createElement('div');d.className='rd'+(i===0?' cur':'');d.id='fd'+i;dt.appendChild(d);}
+  loadFR();
+})();
+
+function loadFR(){
+  fAns=false;
+  allPts.forEach(p=>{const e=document.getElementById('ph_'+p);if(e)e.classList.remove('ok','err');});
+  for(let i=0;i<5;i++){const d=document.getElementById('fd'+i);if(d){d.classList.remove('cur','ok','err');if(i===fIdx)d.classList.add('cur');}}
+  const r=fRounds[fIdx];
+  const pr=document.getElementById('fp');
+  pr.textContent='👆 Tap the: '+r.lbl;
+  pr.style.color=r.col;pr.style.borderColor=r.col;pr.style.background=r.col+'18';
+  pr.style.animation='none';void pr.offsetWidth;pr.style.animation='pPop .3s ease';
+  document.getElementById('ffb').textContent='';
+}
+
+function findTap(part){
+  if(fAns||fIdx>=5)return;
+  fAns=true;
+  const r=fRounds[fIdx];
+  const el=document.getElementById('ph_'+part);
+  const dot=document.getElementById('fd'+fIdx);
+  dot.classList.remove('cur');
+  if(part===r.p){
+    el.classList.add('ok');
+    document.getElementById('ffb').textContent='✅ Correct! '+r.lbl+' found!';
+    document.getElementById('ffb').style.color='#2e7d32';
+    dot.classList.add('ok');addStars(1);fStars++;showStarsRain();
+    setTimeout(()=>{fIdx++;fIdx>=5?doneFR():loadFR();},1400);
+  }else{
+    el.classList.add('err');
+    // also highlight the correct part in green so they can see it
+    document.getElementById('ph_'+r.p).classList.add('ok');
+    document.getElementById('ffb').textContent='❌ That\'s the '+part.toUpperCase()+'! The correct part ('+r.lbl+') is now glowing green. '+r.exp;
+    document.getElementById('ffb').style.color='#c62828';
+    dot.classList.add('err');showBlackClouds();
+    setTimeout(()=>{fIdx++;fIdx>=5?doneFR():loadFR();}, 2800);
+  }
+}
+function doneFR(){
+  const pr=document.getElementById('fp');
+  pr.textContent='🎉 All 5 parts found!';
+  pr.style.color='#2e7d32';pr.style.borderColor='#4caf50';pr.style.background='#e8f5e9';
+  showDone(2,'🎉 Plant Expert!',fStars,'You identified all plant parts! Great work!');
+}
+
+// ────────────────────────────────────────
+//  GAME 3 · MEMORY MATCH
+// ────────────────────────────────────────
+const mPairs=[
+  {id:'root',  f:'🌱 Root',  b:'💧 Absorbs water &amp; minerals from soil'},
+  {id:'stem',  f:'🌿 Stem',  b:'🏗️ Supports the plant &amp; carries water'},
+  {id:'leaf',  f:'🍃 Leaf',  b:'☀️ Makes food by photosynthesis'},
+  {id:'flower',f:'🌸 Flower',b:'🦋 Attracts insects for pollination'},
+];
+let mFlip=[],mMatch=0,mLock=false;
+
+(function initMem(){
+  let cards=[];
+  mPairs.forEach(p=>{cards.push({id:p.id,side:'f',txt:p.f});cards.push({id:p.id,side:'b',txt:p.b});});
+  for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}
+  const grid=document.getElementById('cgrid');grid.innerHTML='';
+  cards.forEach(c=>{
+    const el=document.createElement('div');el.className='mc';
+    el.dataset.id=c.id;el.dataset.side=c.side;
+    el.innerHTML=`<div class="mc-in"><div class="mc-f">🌿</div><div class="mc-b">${c.txt}</div></div>`;
+    el.onclick=()=>flipMem(el);grid.appendChild(el);
+  });
+})();
+
+function flipMem(card){
+  if(mLock||card.classList.contains('flip')||card.classList.contains('matched'))return;
+  card.classList.add('flip');mFlip.push(card);
+  if(mFlip.length===2){
+    mLock=true;
+    const[a,b]=mFlip;
+    if(a.dataset.id===b.dataset.id&&a.dataset.side!==b.dataset.side){
+      a.classList.add('matched');b.classList.add('matched');
+      mMatch++;mFlip=[];mLock=false;
+      const msg=document.getElementById('mmsg');
+      if(mMatch===4){
+        msg.style.color='#2e7d32';msg.textContent='🎉 All 4 pairs matched! Perfect! +3 ⭐';
+        addStars(3);showStarsRain();showDone(3,'🎉 Memory Champion!',3,'All pairs matched! +3 stars!');
+      }else{showStarsRain();msg.style.color='#2e7d32';msg.textContent=`✅ Match! ${mMatch}/4 pairs found!`;}
+    }else{
+      setTimeout(()=>{
+        a.classList.remove('flip');b.classList.remove('flip');mFlip=[];mLock=false;
+        document.getElementById('mmsg').textContent='❌ Not a match — keep looking!';
+        document.getElementById('mmsg').style.color='#c62828';
+      },900);
+    }
+  }
+}
+
+// ────────────────────────────────────────
+//  GAME 4 · ROOT SORTER
+// ────────────────────────────────────────
+const sItems=[
+  {n:'🥭 Mango',   t:'tap',    exp:'Mango has ONE thick taproot going straight down into the soil.',         ans:'Tap Root'},
+  {n:'🌾 Grass',   t:'fibrous',exp:'Grass has MANY thin roots growing from the base — a fibrous root system!',ans:'Fibrous Root'},
+  {n:'🌿 Neem',    t:'tap',    exp:'Neem trees have a taproot — one strong root digging deep into soil.',    ans:'Tap Root'},
+  {n:'🍚 Rice',    t:'fibrous',exp:'Rice has fibrous roots — many thin roots from the base, no main root!',  ans:'Fibrous Root'},
+  {n:'🧅 Onion',   t:'fibrous',exp:'Onions have fibrous roots — lots of thin roots growing from the bulb bottom!',ans:'Fibrous Root'},
+  {n:'🌻 Mustard', t:'tap',    exp:'Mustard has a taproot — it\'s one of the classic taproot examples from your book!',ans:'Tap Root'},
+  {n:'🌿 Cotton',  t:'tap',    exp:'Cotton has a taproot system with one main thick root going down.',        ans:'Tap Root'},
+  {n:'🌾 Wheat',   t:'fibrous',exp:'Wheat has fibrous roots — many thin roots, just like rice and grass!',   ans:'Fibrous Root'},
+];
+let sIdx=0,tCnt=0,fCnt=0,sDone=false,sStars=0;
+(function initSort(){loadS();})();
+
+function loadS(){
+  sDone=false;
+  if(sIdx>=sItems.length)return;
+  const el=document.getElementById('si');
+  el.style.animation='none';void el.offsetWidth;el.style.animation='popIn .3s ease';
+  el.textContent=sItems[sIdx].n;
+  document.getElementById('sfb').textContent='';
+  document.getElementById('sprog').textContent=`Plant ${sIdx+1} of 8`;
+}
+
+function sortAns(choice){
+  if(sDone||sIdx>=sItems.length)return;sDone=true;
+  const item=sItems[sIdx];
+  const tapEl=document.querySelector('.tapb'),fibEl=document.querySelector('.fibb');
+  const btn=(choice==='tap'?tapEl:fibEl);
+  const isOk=(choice===item.t);
+  btn.classList.add(isOk?'cf':'wf');
+  setTimeout(()=>btn.classList.remove('cf','wf'),500);
+
+  if(isOk){
+    document.getElementById('sfb').style.color='#2e7d32';
+    document.getElementById('sfb').textContent='✅ Correct! '+item.exp;
+    addStars(1);sStars++;showStarsRain();
+    if(choice==='tap'){tCnt++;document.getElementById('tsc').textContent=tCnt+' ✓';}
+    else{fCnt++;document.getElementById('fsc').textContent=fCnt+' ✓';}
+    sIdx++;
+    if(sIdx>=8){setTimeout(()=>showDone(4,'🎉 Sorting Expert!',sStars,'All 8 plants sorted! '+sStars+' correct!'),1200);}
+    else{setTimeout(loadS,1500);}
+  }else{
+    document.getElementById('sfb').style.color='#c62828';
+    document.getElementById('sfb').textContent='❌ Not quite! '+item.exp+' Correct: '+item.ans;
+    showBlackClouds();sIdx++;
+    if(sIdx>=8){setTimeout(()=>showDone(4,'🎉 Sorting Expert!',sStars,'All 8 plants sorted! '+sStars+' correct!'),2200);}
+    else{setTimeout(loadS,2200);}
+  }
+}
+
+// ────────────────────────────────────────
+//  GAME 5 · LIGHTNING QUIZ
+// ────────────────────────────────────────
+const allQs=[
+  {q:'Which part of the plant makes food using sunlight?',opts:['Root 🌱','Stem 🌿','Leaf 🍃','Flower 🌸'],ans:2,exp:'Leaves are the food factory! They use sunlight, water and CO₂ through photosynthesis to make food for the whole plant.'},
+  {q:'What is GERMINATION?',opts:['A flower blooming','A seed growing into a plant','Leaves making food','Root absorbing water'],ans:1,exp:'Germination is when a seed gets water, air and warmth and starts to grow into a new plant! The baby plant inside the seed wakes up!'},
+  {q:'Which plant has a TAP ROOT?',opts:['Rice 🍚','Wheat 🌾','Grass 🌾','Mango 🥭'],ans:3,exp:'Mango, Neem, Cotton and Mustard all have taproots — one thick main root growing straight down into the soil!'},
+  {q:'Tiny pores on the lower surface of leaves are called:',opts:['Veins','Stomata','Stalk','Leaf blade'],ans:1,exp:'Stomata are tiny pores on the lower surface of leaves. Plants breathe through stomata — taking in CO₂ and releasing oxygen!'},
+  {q:'Which of these is an EDIBLE STEM?',opts:['Carrot 🥕','Potato 🥔','Spinach 🥬','Radish'],ans:1,exp:'Potato is a stem that stores food underground! Ginger and Sugarcane are also edible stems. Carrot and Radish are roots!'},
+  {q:'The world\'s biggest flower is called:',opts:['Rose 🌹','Sunflower 🌻','Rafflesia','Lotus'],ans:2,exp:'Rafflesia is the world\'s largest flower! It can be as wide as a car tyre and has a very strong smell.'},
+  {q:'What gives leaves their green colour?',opts:['Stomata','Germination','Chlorophyll','Stalk'],ans:2,exp:'Chlorophyll is the green pigment in leaves! It absorbs sunlight for photosynthesis and gives leaves their beautiful green colour.'},
+  {q:'Which plant has FIBROUS roots?',opts:['Mango','Neem','Mustard','Wheat 🌾'],ans:3,exp:'Wheat, Grass, Rice and Onion all have fibrous roots — many thin roots from the base with no single main root!'},
+  {q:'Which part supports the plant and helps it stand upright?',opts:['Leaf','Flower','Stem 🌿','Root'],ans:2,exp:'The stem is the backbone of the plant! It gives support, carries water from roots to leaves, and bears all other parts.'},
+  {q:'Roots absorb ___ from the soil.',opts:['Sunlight','Water &amp; minerals','Carbon dioxide','Oxygen'],ans:1,exp:'Roots absorb water and minerals from the soil and send them up through the stem to the leaves for photosynthesis!'},
+  {q:'Which of these are EDIBLE ROOTS?',opts:['Potato &amp; Ginger','Sugarcane','Carrot &amp; Radish','Spinach'],ans:2,exp:'Carrot, Radish and Turnip are tasty edible roots! They store food in the root itself. Potato is a stem, not a root!'},
+  {q:'A seed needs ___ to germinate.',opts:['Only sunlight','Only water','Water, air &amp; warmth','Only soil'],ans:2,exp:'A seed needs water, air and warmth to germinate! These three things wake up the tiny baby plant sleeping inside the seed.'},
+];
+
+const NUM_Q=8;
+let qBank=[],qIdx=0,qTimer=null,qLeft=25,qDone=false,qStars=0;
+
+(function initQuiz(){
+  const pool=[...allQs];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  qBank=pool.slice(0,NUM_Q);
+  const dt=document.getElementById('q-rdots');dt.innerHTML='';
+  for(let i=0;i<NUM_Q;i++){const d=document.createElement('div');d.className='rd'+(i===0?' cur':'');d.id='qd'+i;dt.appendChild(d);}
+  // loadQ() is NOT called here — timer starts only when user reaches screen 5 via goTo(5)
+})();
+
+function loadQ(){
+  if(qIdx>=NUM_Q)return;
+  qDone=false;
+  const q=qBank[qIdx];
+  for(let i=0;i<NUM_Q;i++){const d=document.getElementById('qd'+i);if(d){d.classList.remove('cur','ok','err');if(i===qIdx)d.classList.add('cur');}}
+  document.getElementById('qq').textContent=q.q;
+  document.getElementById('qfb').textContent='';
+  document.getElementById('qprog').textContent=`Question ${qIdx+1} of ${NUM_Q}`;
+  const wrap=document.getElementById('qopts');wrap.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='qo';b.innerHTML=o;
+    b.onclick=()=>ansQ(b,i,q);wrap.appendChild(b);
+  });
+  qLeft=25;clearInterval(qTimer);
+  const fill=document.getElementById('tfill');
+  fill.style.transition='none';fill.style.width='100%';
+  setTimeout(()=>{fill.style.transition='width .1s linear';},20);
+  qTimer=setInterval(()=>{
+    qLeft-=.1;
+    fill.style.width=Math.max(0,(qLeft/25)*100)+'%';
+    if(qLeft<=0){
+      clearInterval(qTimer);
+      if(!qDone){
+        qDone=true;
+        const dot=document.getElementById('qd'+qIdx);if(dot){dot.classList.remove('cur');dot.classList.add('err');}
+        document.querySelectorAll('.qo').forEach((b,i)=>{b.disabled=true;if(i===q.ans)b.classList.add('hl');});
+        document.getElementById('qfb').style.color='#e65100';
+        document.getElementById('qfb').textContent='⏰ Time\'s up! Answer: '+q.opts[q.ans].replace(/<[^>]+>/g,'')+'. '+q.exp;
+        showBlackClouds();
+        setTimeout(()=>{qIdx++;qIdx>=NUM_Q?doneQ():loadQ();},2800);
+      }
+    }
+  },100);
+}
+
+function ansQ(btn,chosen,q){
+  if(qDone)return;
+  qDone=true;clearInterval(qTimer);
+  document.querySelectorAll('.qo').forEach(b=>b.disabled=true);
+  const dot=document.getElementById('qd'+qIdx);if(dot){dot.classList.remove('cur');}
+  if(chosen===q.ans){
+    btn.classList.add('ok');
+    document.getElementById('qfb').textContent='✅ Correct! '+q.exp;
+    document.getElementById('qfb').style.color='#2e7d32';
+    if(dot)dot.classList.add('ok');addStars(1);qStars++;showStarsRain();
+    setTimeout(()=>{qIdx++;qIdx>=NUM_Q?doneQ():loadQ();},2000);
+  }else{
+    btn.classList.add('no');
+    document.querySelectorAll('.qo')[q.ans].classList.add('hl');
+    if(dot)dot.classList.add('err');
+    document.getElementById('qfb').textContent='❌ Answer: '+q.opts[q.ans].replace(/<[^>]+>/g,'')+'. '+q.exp;
+    document.getElementById('qfb').style.color='#c62828';
+    showBlackClouds();
+    setTimeout(()=>{qIdx++;qIdx>=NUM_Q?doneQ():loadQ();},2800);
+  }
+}
+function doneQ(){
+  document.getElementById('qq').textContent='🎉 Quiz Complete!';
+  document.getElementById('qopts').innerHTML='';
+  document.getElementById('tfill').style.width='0';
+  showDone(5,'⚡ Quiz Champion!',qStars,`${qStars}/${NUM_Q} correct! Impressive!`);
+}
+
+// ────────────────────────────────────────
+//  GAME 6 · WORD SCRAMBLE
+// ────────────────────────────────────────
+const scrWords=[
+  {word:'STOMATA',   hint:'Tiny pores on the lower surface of leaves for breathing',     opts:['STOMATA','STAMOTA','MOSTATA','TSOMATA']},
+  {word:'TAPROOT',   hint:'The single thick main root going straight down into the soil', opts:['ROOTATAP','TAPROOT','ROOTTAP','APTROOT']},
+  {word:'FIBROUS',   hint:'Type of root with many thin roots from the base — no main root',opts:['RUOSFIB','BROUIFS','FIBROUS','FIRBOUS']},
+  {word:'GERMINATE', hint:'What a seed does when it gets water, air and warmth',           opts:['GERMIANTE','GERMINATE','GERMINETA','MIGERANTE']},
+  {word:'SEEDLING',  hint:'A tiny baby plant that just sprouted from a seed',              opts:['SELEDIGN','DINGSLEE','SEEDLING','LINGSEED']},
+  {word:'CHLOROPHYLL',hint:'The green pigment in leaves that captures sunlight',           opts:['CHLOROPHYLL','CHLOPHYRLL','CHLORPHYLL','CHORLLPHYL']},
+];
+const scrExps={
+  STOMATA:'Stomata are tiny pores on the LOWER surface of leaves. Plants breathe through them — taking in CO₂ and releasing oxygen!',
+  TAPROOT:'A taproot is ONE thick main root going straight down. Examples: Mango, Neem, Cotton, Mustard!',
+  FIBROUS:'Fibrous roots are MANY thin roots growing from the base — no single main root. Examples: Grass, Wheat, Rice!',
+  GERMINATE:'Germinate means to grow! When a seed gets water, air and warmth, it germinates into a new baby plant!',
+  SEEDLING:'A seedling is a tiny young plant. When a seed germinates, the first small plant that grows is called a seedling!',
+  CHLOROPHYLL:'Chlorophyll is the green pigment in leaves. It captures sunlight for photosynthesis and gives plants their green colour!',
+};
+
+function scramble(w){const a=w.split('');for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.join('')===w?scramble(w):a.join('');}
+
+let scrIdx=0,scrDone=false,scrStars=0;
+
+(function initScr(){
+  const dt=document.getElementById('s-rdots');
+  for(let i=0;i<scrWords.length;i++){const d=document.createElement('div');d.className='rd'+(i===0?' cur':'');d.id='sd'+i;dt.appendChild(d);}
+  loadScr();
+})();
+
+function loadScr(){
+  scrDone=false;
+  if(scrIdx>=scrWords.length)return;
+  const w=scrWords[scrIdx];
+  const jumbled=scramble(w.word);
+  // dots
+  for(let i=0;i<scrWords.length;i++){const d=document.getElementById('sd'+i);if(d){d.classList.remove('cur','ok','err');if(i===scrIdx)d.classList.add('cur');}}
+  // tiles
+  const wrap=document.getElementById('scr-word');wrap.innerHTML='';
+  jumbled.split('').forEach((ch,i)=>{
+    const t=document.createElement('div');t.className='scr-tile';t.style.setProperty('--i',i);t.textContent=ch;wrap.appendChild(t);
+  });
+  document.getElementById('scr-hint').textContent='💡 Hint: '+w.hint;
+  document.getElementById('scr-fb').textContent='';
+  document.getElementById('scr-prog').textContent=`Word ${scrIdx+1} of ${scrWords.length}`;
+  // opts
+  const opts=[...w.opts];for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
+  const ow=document.getElementById('scr-opts');ow.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button');b.className='scr-opt';b.textContent=o;
+    b.onclick=()=>{
+      if(scrDone)return;scrDone=true;
+      ow.querySelectorAll('.scr-opt').forEach(x=>x.disabled=true);
+      const dot=document.getElementById('sd'+scrIdx);if(dot)dot.classList.remove('cur');
+      if(o===w.word){
+        b.classList.add('sok');
+        document.getElementById('scr-fb').textContent='✅ Correct! The word is '+w.word+'!';
+        document.getElementById('scr-fb').style.color='#2e7d32';
+        if(dot)dot.classList.add('ok');addStars(1);scrStars++;showStarsRain();
+        scrIdx++;
+        if(scrIdx>=scrWords.length){setTimeout(()=>showDone(6,'🔤 Word Wizard!',scrStars,'All words unscrambled!'),1400);}
+        else{setTimeout(loadScr,1500);}
+      }else{
+        b.classList.add('sno');
+        ow.querySelectorAll('.scr-opt').forEach(x=>{if(x.textContent===w.word)x.classList.add('sok');});
+        if(dot)dot.classList.add('err');
+        document.getElementById('scr-fb').textContent='❌ The answer is '+w.word+'! '+scrExps[w.word];
+        document.getElementById('scr-fb').style.color='#c62828';
+        showBlackClouds();scrIdx++;
+        if(scrIdx>=scrWords.length){setTimeout(()=>showDone(6,'🔤 Word Wizard!',scrStars,'All words done! '+scrStars+' correct!'),2500);}
+        else{setTimeout(loadScr,2500);}
+      }
+    };
+    ow.appendChild(b);
+  });
+}
+
+// ────────────────────────────────────────
+//  GAME 7 · TRUE OR FALSE (15 questions)
+// ────────────────────────────────────────
+const tofStmts=[
+  {s:'Leaves make food for the whole plant.',          ans:true, head:'✅ TRUE!',   exp:'Leaves are the food factory! They use sunlight, water and CO₂ to make food through PHOTOSYNTHESIS.'},
+  {s:'Roots grow ABOVE the ground.',                   ans:false,head:'❌ FALSE!',  exp:'Roots grow BELOW the ground! The part above ground is called the SHOOT (stem, leaves, flowers, fruits).'},
+  {s:'Potato is a ROOT that grows underground.',       ans:false,head:'❌ FALSE!',  exp:'Potato is actually a STEM! It grows underground but stores food — just like sugarcane and ginger. It is NOT a root!'},
+  {s:'Mango trees have a Tap Root.',                   ans:true, head:'✅ TRUE!',   exp:'Mango has ONE thick taproot going straight down. Other taproot plants: Neem, Cotton, Mustard.'},
+  {s:'Grass has a Fibrous Root system.',               ans:true, head:'✅ TRUE!',   exp:'Grass has MANY thin roots from the base — a fibrous root system! Others: Wheat, Rice, Onion.'},
+  {s:'Stomata are found on the UPPER surface of the leaf.',ans:false,head:'❌ FALSE!',exp:'Stomata are on the LOWER (bottom) surface of the leaf! They are tiny pores through which plants breathe.'},
+  {s:'Flowers attract insects and butterflies.',       ans:true, head:'✅ TRUE!',   exp:'Flowers use their bright colours and sweet fragrance to attract insects for pollination. Flowers then grow into fruits!'},
+  {s:'Germination is when a seed grows into a new plant.',ans:true,head:'✅ TRUE!', exp:'Germination happens when a seed gets water, air and warmth. The baby plant inside the seed wakes up and grows!'},
+  {s:'Chlorophyll makes leaves green.',                ans:true, head:'✅ TRUE!',   exp:'Chlorophyll is the green pigment in leaves! It absorbs sunlight for photosynthesis and gives leaves their beautiful green colour.'},
+  {s:'Photosynthesis happens in the ROOTS.',           ans:false,head:'❌ FALSE!',  exp:'Photosynthesis happens in the LEAVES! Leaves have chlorophyll to capture sunlight and make food using CO₂ and water.'},
+  {s:'Fibrous roots have ONE main thick root.',        ans:false,head:'❌ FALSE!',  exp:'That describes a TAP ROOT! Fibrous roots have MANY thin roots from the base with no single main root. Example: grass!'},
+  {s:'Mushrooms make their own food like green plants.',ans:false,head:'❌ FALSE!',exp:'Mushrooms are non-green plants — they CANNOT make their own food! They feed on decaying matter in the soil.'},
+  {s:'The Rafflesia is the world\'s biggest flower.', ans:true, head:'✅ TRUE!',   exp:'Rafflesia is the world\'s LARGEST flower! It can be as wide as a car tyre and has a very strong smell.'},
+  {s:'Spinach is an edible leaf that we eat.',         ans:true, head:'✅ TRUE!',   exp:'Spinach, Cabbage, Lettuce and Coriander are all leaves that store food and we eat them! Leaves can be food too!'},
+  {s:'Carbon dioxide is needed for photosynthesis.',   ans:true, head:'✅ TRUE!',   exp:'Photosynthesis needs: Sunlight + Water + Carbon Dioxide (CO₂). Leaves take in CO₂ through stomata to make food!'},
+];
+let tIdx=0,tDone=false,tStars=0;
+
+(function initTof(){
+  const dt=document.getElementById('tof-rdots');
+  for(let i=0;i<tofStmts.length;i++){const d=document.createElement('div');d.className='rd'+(i===0?' cur':'');d.id='td'+i;dt.appendChild(d);}
+  loadTof();
+})();
+
+function loadTof(){
+  tDone=false;
+  if(tIdx>=tofStmts.length)return;
+  for(let i=0;i<tofStmts.length;i++){const d=document.getElementById('td'+i);if(d){d.classList.remove('cur','ok','err');if(i===tIdx)d.classList.add('cur');}}
+  document.getElementById('tof-stmt').textContent=tofStmts[tIdx].s;
+  document.getElementById('tof-fb').textContent='';
+  document.getElementById('tof-prog').textContent=`Statement ${tIdx+1} of ${tofStmts.length}`;
+  document.getElementById('btn-t').classList.remove('dim','gok','gno');
+  document.getElementById('btn-f').classList.remove('dim','gok','gno');
+}
+
+function tofAns(chosen){
+  if(tDone)return;tDone=true;
+  const stmt=tofStmts[tIdx];
+  const tBtn=document.getElementById('btn-t'),fBtn=document.getElementById('btn-f');
+  tBtn.classList.add('dim');fBtn.classList.add('dim');
+  const clickedBtn=chosen?tBtn:fBtn;
+  const dot=document.getElementById('td'+tIdx);if(dot)dot.classList.remove('cur');
+  const isOk=(chosen===stmt.ans);
+  clickedBtn.classList.add(isOk?'gok':'gno');
+  if(isOk){
+    document.getElementById('tof-fb').textContent='✅ '+stmt.head;
+    document.getElementById('tof-fb').style.color='#2e7d32';
+    if(dot)dot.classList.add('ok');addStars(1);tStars++;showStarsRain();
+    tIdx++;
+    if(tIdx>=tofStmts.length){setTimeout(()=>showDone(7,'✅ Truth Seeker!',tStars,tStars+'/15 correct! Outstanding!'),1400);}
+    else{setTimeout(loadTof,1500);}
+  }else{
+    document.getElementById('tof-fb').textContent=stmt.exp;
+    document.getElementById('tof-fb').style.color='#c62828';
+    if(dot)dot.classList.add('err');showBlackClouds();
+    tIdx++;
+    if(tIdx>=tofStmts.length){setTimeout(()=>showDone(7,'✅ Truth Seeker!',tStars,tStars+'/15 correct!'),2200);}
+    else{setTimeout(loadTof,2200);}
+  }
+}
+
+// ────────────────────────────────────────
+//  GAME 8 · FILL IN THE BLANKS
+// ────────────────────────────────────────
+const fibQs=[
+  {q:'The green substance in leaves that helps make food is called ___.', blank:'___', ans:'Chlorophyll', opts:['Stomata','Chlorophyll','Germination','Photosynthesis'],exp:'Chlorophyll is the green pigment in leaves. It absorbs sunlight and is essential for making food through photosynthesis!'},
+  {q:'The process of making food using sunlight is called ___.', blank:'___', ans:'Photosynthesis', opts:['Germination','Evaporation','Photosynthesis','Pollination'],exp:'Photosynthesis = Sunlight + Water + CO₂ → Food for the plant! It happens in the leaves.'},
+  {q:'Tiny pores on the lower surface of leaves are called ___.', blank:'___', ans:'Stomata', opts:['Veins','Stomata','Stalk','Leaf blade'],exp:'Stomata are tiny breathing holes on the LOWER surface of leaves. Plants breathe CO₂ in and oxygen out through stomata!'},
+  {q:'When a seed grows into a new plant, the process is called ___.', blank:'___', ans:'Germination', opts:['Pollination','Photosynthesis','Evaporation','Germination'],exp:'Germination happens when a seed gets water, air and warmth — the baby plant inside wakes up and starts growing!'},
+  {q:'Mango has a ___ root.', blank:'___', ans:'Tap', opts:['Fibrous','Tap','Hair','Water'],exp:'Mango has a TAP root — one thick main root going straight down. Other examples: Neem, Cotton, Mustard!'},
+  {q:'Grass has a ___ root system.', blank:'___', ans:'Fibrous', opts:['Tap','Deep','Fibrous','Strong'],exp:'Grass has FIBROUS roots — many thin roots from the base. Other examples: Wheat, Rice, Onion!'},
+  {q:'The flat, broad part of the leaf is called the ___.', blank:'___', ans:'Leaf blade', opts:['Stalk','Stomata','Leaf blade','Main vein'],exp:'The LEAF BLADE is the flat, broad part that collects sunlight. The stalk connects the leaf to the stem.'},
+  {q:'The part of the plant growing ABOVE the ground is called the ___.', blank:'___', ans:'Shoot', opts:['Root','Seed','Shoot','Underground'],exp:'The SHOOT includes the stem, leaves, branches, flowers and fruits — everything growing above ground!'},
+  {q:'Potato is an example of an edible ___.', blank:'___', ans:'Stem', opts:['Leaf','Root','Stem','Flower'],exp:'Potato is a STEM that stores food underground! Ginger and Sugarcane are also edible stems. Carrot & Radish are roots!'},
+  {q:'The world\'s largest flower is called ___.', blank:'___', ans:'Rafflesia', opts:['Rose','Sunflower','Lotus','Rafflesia'],exp:'Rafflesia is the world\'s BIGGEST flower — as wide as a car tyre! It\'s a fact from your textbook.'},
+];
+let fibIdx=0,fibDone=false,fibStars=0;
+
+(function initFib(){
+  const dt=document.getElementById('fib-rdots');
+  for(let i=0;i<fibQs.length;i++){const d=document.createElement('div');d.className='rd'+(i===0?' cur':'');d.id='fbd'+i;dt.appendChild(d);}
+  loadFib();
+})();
+
+function loadFib(){
+  fibDone=false;
+  if(fibIdx>=fibQs.length)return;
+  const q=fibQs[fibIdx];
+  for(let i=0;i<fibQs.length;i++){const d=document.getElementById('fbd'+i);if(d){d.classList.remove('cur','ok','err');if(i===fibIdx)d.classList.add('cur');}}
+  // build question with styled blank
+  document.getElementById('fib-q').innerHTML=q.q.replace('___','<span class="blank">___</span>');
+  document.getElementById('fib-fb').textContent='';
+  document.getElementById('fib-prog').textContent=`Question ${fibIdx+1} of ${fibQs.length}`;
+  const opts=[...q.opts];for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
+  const wrap=document.getElementById('fib-opts');wrap.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button');b.className='fib-opt';b.textContent=o;
+    b.onclick=()=>{
+      if(fibDone)return;fibDone=true;
+      wrap.querySelectorAll('.fib-opt').forEach(x=>x.disabled=true);
+      const dot=document.getElementById('fbd'+fibIdx);if(dot)dot.classList.remove('cur');
+      if(o===q.ans){
+        b.classList.add('ok');
+        document.getElementById('fib-fb').textContent='✅ Correct! '+q.exp;
+        document.getElementById('fib-fb').style.color='#2e7d32';
+        if(dot)dot.classList.add('ok');addStars(1);fibStars++;showStarsRain();
+        fibIdx++;
+        if(fibIdx>=fibQs.length){setTimeout(()=>showDone(8,'✏️ Blank Filler Champion!',fibStars,fibStars+'/10 correct! Great work!'),1500);}
+        else{setTimeout(loadFib,1800);}
+      }else{
+        b.classList.add('no');
+        wrap.querySelectorAll('.fib-opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('hl');});
+        if(dot)dot.classList.add('err');
+        document.getElementById('fib-fb').textContent='❌ Answer: '+q.ans+'. '+q.exp;
+        document.getElementById('fib-fb').style.color='#c62828';
+        showBlackClouds();fibIdx++;
+        if(fibIdx>=fibQs.length){setTimeout(()=>showDone(8,'✏️ Blank Filler Champion!',fibStars,fibStars+'/10 correct!'),2500);}
+        else{setTimeout(loadFib,2500);}
+      }
+    };
+    wrap.appendChild(b);
+  });
+}
+
+updateFinalGrade();
+</script>
+</body>
+</html>

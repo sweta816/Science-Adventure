@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>🌿 Shrenu's Science Adventure</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(160deg,#e3f2fd 0%,#e8f5e9 50%,#fce4ec 100%);
+  min-height:100vh;
+}
+header{
+  background:linear-gradient(135deg,#1a237e,#283593,#1565c0);
+  color:#fff;text-align:center;
+  padding:32px 20px 26px;
+  border-radius:0 0 36px 36px;
+  box-shadow:0 6px 28px rgba(0,0,0,.22);
+}
+header .badge{
+  display:inline-block;background:#ffeb3b;color:#1a237e;
+  font-weight:800;font-size:12px;padding:4px 16px;
+  border-radius:20px;margin-bottom:10px;letter-spacing:1px;
+}
+header h1{font-size:clamp(1.5rem,5vw,2.3rem);margin-bottom:6px}
+header .sub{font-size:.95rem;opacity:.85}
+header .name{
+  display:inline-block;margin-top:10px;
+  background:rgba(255,255,255,.18);
+  border-radius:20px;padding:5px 20px;
+  font-size:.9rem;font-weight:700;
+}
+
+.wrap{max-width:740px;margin:28px auto;padding:0 14px}
+
+.progress-bar-wrap{
+  background:#fff;border-radius:16px;padding:16px 20px;
+  margin-bottom:24px;box-shadow:0 4px 16px rgba(0,0,0,.1);
+  display:flex;align-items:center;gap:14px;
+}
+.prog-info{flex:1}
+.prog-info h3{font-size:.95rem;font-weight:800;color:#1565c0}
+.prog-info p{font-size:.8rem;color:#777;margin-top:2px}
+.prog-track{flex:2;height:12px;background:#e0e0e0;border-radius:12px;overflow:hidden}
+.prog-fill{height:100%;width:7.14%;background:linear-gradient(90deg,#43a047,#ffb300);border-radius:12px;transition:width .5s ease}
+.prog-label{font-weight:800;font-size:.9rem;color:#43a047;white-space:nowrap}
+
+h2.section-title{
+  font-size:1.1rem;font-weight:800;color:#333;
+  margin-bottom:14px;padding-left:8px;
+  border-left:4px solid #1565c0;
+}
+
+.chapter-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:14px;margin-bottom:32px;
+}
+.chap-card{
+  background:#fff;border-radius:18px;padding:18px 14px;
+  box-shadow:0 4px 16px rgba(0,0,0,.1);
+  text-decoration:none;color:#222;
+  transition:transform .18s,box-shadow .18s;
+  position:relative;overflow:hidden;
+}
+.chap-card.active:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(0,0,0,.16)}
+.chap-card.locked{opacity:.55;cursor:default}
+.chap-card .num{
+  font-size:.75rem;font-weight:800;letter-spacing:1px;
+  margin-bottom:8px;opacity:.65;
+}
+.chap-card .icon{font-size:2rem;margin-bottom:8px;display:block}
+.chap-card .title{font-size:.9rem;font-weight:800;line-height:1.3}
+.chap-card .status{
+  font-size:.72rem;font-weight:700;
+  margin-top:8px;padding:3px 10px;
+  border-radius:12px;display:inline-block;
+}
+.chap-card.active .status{background:#e8f5e9;color:#2e7d32}
+.chap-card.locked .status{background:#f5f5f5;color:#999}
+.chap-card.active{border:2px solid #4caf50}
+.chap-card.locked{border:2px solid #e0e0e0}
+.new-badge{
+  position:absolute;top:10px;right:10px;
+  background:#f44336;color:#fff;
+  font-size:.65rem;font-weight:800;
+  padding:2px 7px;border-radius:10px;
+}
+
+footer{
+  text-align:center;padding:24px 16px;
+  font-size:.82rem;color:#888;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">📚 CLASS 3 · SCIENCE</div>
+  <h1>🔬 Science Adventure</h1>
+  <div class="sub">Learn Science by Playing Games!</div>
+  <div class="name">👧 Shrenu Sinha's Science Book</div>
+</header>
+
+<div class="wrap">
+  <div class="progress-bar-wrap">
+    <div class="prog-info">
+      <h3>📊 Your Progress</h3>
+      <p>1 chapter available · 13 coming soon</p>
+    </div>
+    <div class="prog-track"><div class="prog-fill"></div></div>
+    <div class="prog-label">1/14</div>
+  </div>
+
+  <h2 class="section-title">📖 All Chapters</h2>
+
+  <div class="chapter-grid">
+
+    <a href="chapter-02-parts-of-a-plant.html" class="chap-card active">
+      <div class="new-badge">PLAY!</div>
+      <div class="num">CHAPTER 2</div>
+      <span class="icon">🌿</span>
+      <div class="title">Parts of a Plant</div>
+      <div class="status">✅ Ready to Play!</div>
+    </a>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 1</div>
+      <span class="icon">🌍</span>
+      <div class="title">Our Environment</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 3</div>
+      <span class="icon">🐾</span>
+      <div class="title">Animals Around Us</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 4</div>
+      <span class="icon">🦁</span>
+      <div class="title">Wild Animals</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 5</div>
+      <span class="icon">🐦</span>
+      <div class="title">Birds</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 6</div>
+      <span class="icon">💧</span>
+      <div class="title">Water</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 7</div>
+      <span class="icon">🌦️</span>
+      <div class="title">Weather and Seasons</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 8</div>
+      <span class="icon">🪨</span>
+      <div class="title">Rocks and Soil</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 9</div>
+      <span class="icon">🌙</span>
+      <div class="title">The Moon and Stars</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 10</div>
+      <span class="icon">🍎</span>
+      <div class="title">Food and Health</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 11</div>
+      <span class="icon">🏠</span>
+      <div class="title">Our House</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 12</div>
+      <span class="icon">👕</span>
+      <div class="title">Clothing</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 13</div>
+      <span class="icon">🚌</span>
+      <div class="title">Transport</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+    <div class="chap-card locked">
+      <div class="num">CHAPTER 14</div>
+      <span class="icon">📡</span>
+      <div class="title">Communication</div>
+      <div class="status">🔒 Coming Soon</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>Made with ❤️ for Shrenu Sinha · Scientific Approach – Class 3</footer>
+
+</body>
+</html>
